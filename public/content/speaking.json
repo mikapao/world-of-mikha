@@ -1,6 +1,6 @@
 {
-  "_help": "Singing Stone words. 'say' is what Mikha repeats out loud; 'emoji' is the picture shown. Each word needs its own id.",
-  "wordsPerVisit": 5,
+  "_help": "Singing Stone words (pool of 25 — 10 are picked at random each visit). 'say' is what Mikha repeats out loud; 'emoji' is the picture shown. Each word needs its own id.",
+  "wordsPerVisit": 10,
   "words": [
     {
       "id": "s1",
@@ -9,28 +9,123 @@
     },
     {
       "id": "s2",
-      "say": "big red ball",
-      "emoji": "🔴"
+      "say": "banana",
+      "emoji": "🍌"
     },
     {
       "id": "s3",
+      "say": "cat",
+      "emoji": "🐱"
+    },
+    {
+      "id": "s4",
+      "say": "dog",
+      "emoji": "🐶"
+    },
+    {
+      "id": "s5",
+      "say": "fish",
+      "emoji": "🐟"
+    },
+    {
+      "id": "s6",
+      "say": "bird",
+      "emoji": "🐦"
+    },
+    {
+      "id": "s7",
+      "say": "flower",
+      "emoji": "🌸"
+    },
+    {
+      "id": "s8",
       "say": "hello",
       "emoji": "👋"
     },
     {
-      "id": "s4",
+      "id": "s9",
+      "say": "goodbye",
+      "emoji": "👋"
+    },
+    {
+      "id": "s10",
       "say": "thank you",
       "emoji": "🙏"
     },
     {
-      "id": "s5",
+      "id": "s11",
+      "say": "please",
+      "emoji": "🙂"
+    },
+    {
+      "id": "s12",
+      "say": "good morning",
+      "emoji": "🌅"
+    },
+    {
+      "id": "s13",
+      "say": "good night",
+      "emoji": "🌙"
+    },
+    {
+      "id": "s14",
+      "say": "I love you",
+      "emoji": "❤️"
+    },
+    {
+      "id": "s15",
+      "say": "big red ball",
+      "emoji": "🔴"
+    },
+    {
+      "id": "s16",
       "say": "little star",
       "emoji": "⭐"
     },
     {
-      "id": "s6",
+      "id": "s17",
       "say": "happy cat",
       "emoji": "😺"
+    },
+    {
+      "id": "s18",
+      "say": "blue sky",
+      "emoji": "🌤️"
+    },
+    {
+      "id": "s19",
+      "say": "yellow sun",
+      "emoji": "☀️"
+    },
+    {
+      "id": "s20",
+      "say": "one two three",
+      "emoji": "🔢"
+    },
+    {
+      "id": "s21",
+      "say": "rainbow",
+      "emoji": "🌈"
+    },
+    {
+      "id": "s22",
+      "say": "ice cream",
+      "emoji": "🍦"
+    },
+    {
+      "id": "s23",
+      "say": "teddy bear",
+      "emoji": "🧸"
+    },
+    {
+      "id": "s24",
+      "say": "butterfly",
+      "emoji": "🦋"
+    },
+    {
+      "id": "s25",
+      "say": "I am happy",
+      "emoji": "😊"
     }
   ]
 }

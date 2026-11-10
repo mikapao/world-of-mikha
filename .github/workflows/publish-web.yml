@@ -32,6 +32,29 @@ jobs:
         with:
           node-version: 22
       - run: npm install
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Remember downloads and recorded voice between builds
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/huggingface
+            public/voice
+          key: voice-v1-${{ hashFiles('src/voiceLines.js', 'src/voiceKey.js', 'src/avatars/index.js', 'public/content/**', 'scripts/**') }}
+          restore-keys: voice-v1-
+
+      - name: Record the game voice (Kokoro, British "Emma")
+        continue-on-error: true          # if this ever fails, the app still works with the tablet's voice
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq espeak-ng ffmpeg
+          pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -q "kokoro>=0.9" soundfile numpy
+          node scripts/voice-lines.mjs voice-lines.json
+          python scripts/make_voice.py voice-lines.json public/voice
+
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

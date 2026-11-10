@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "_help": "Bump 'version' by 1 every time you change any question file, so tablets know to download the new questions.",
   "monuments": {
     "counting-waterfall": "math.json",

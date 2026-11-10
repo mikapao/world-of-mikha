@@ -1,6 +1,6 @@
 {
-  "_help": "Giant Lollipop words. 'word' is what the voice says ('Find the cupcake!'), 'emoji' is the picture. Wrong answers are picked from the other words. Optional per word: 'choices': [emoji, emoji] to choose the wrong pictures yourself.",
-  "questionsPerVisit": 5,
+  "_help": "Giant Lollipop words (pool of 25 — 10 are picked at random each visit). 'word' is what the voice says ('Find the cupcake!'), 'emoji' is the picture. Wrong answers are picked from the other words. Optional per word: 'choices': [emoji, emoji] to choose the wrong pictures yourself.",
+  "questionsPerVisit": 10,
   "choicesPerQuestion": 3,
   "words": [
     {
@@ -102,6 +102,31 @@
       "id": "v20",
       "word": "orange",
       "emoji": "🍊"
+    },
+    {
+      "id": "v21",
+      "word": "pear",
+      "emoji": "🍐"
+    },
+    {
+      "id": "v22",
+      "word": "peach",
+      "emoji": "🍑"
+    },
+    {
+      "id": "v23",
+      "word": "pineapple",
+      "emoji": "🍍"
+    },
+    {
+      "id": "v24",
+      "word": "coconut",
+      "emoji": "🥥"
+    },
+    {
+      "id": "v25",
+      "word": "corn",
+      "emoji": "🌽"
     }
   ]
 }

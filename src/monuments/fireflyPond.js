@@ -50,8 +50,10 @@ export function createFireflyPond() {
   let done = false;
 
   // ---- challenge ----
-  let ctx = null, entry = null, plan = [], ri = 0, run = 0, cfg = {};
+  let ctx = null, entry = null, plan = [], ri = 0, run = 0, cfg = {}, usedOdd = [];
   const alive = my => my === run && ctx.shell.isOpen();
+  let lastSaid = "";
+  const say = t => { lastSaid = t; return ctx.speak(t); };   // 🔊 repeats the last line
 
   function frame(prompt, inner, extra = "") {
     ctx.shell.render(`${LEAVE_BUTTON}<button class="say" title="Hear again">🔊</button>
@@ -59,7 +61,7 @@ export function createFireflyPond() {
       <div class="prompt">${prompt}</div>
       <div class="fbox">${inner}</div>
       <div class="feedback"></div>${extra}`);
-    ctx.shell.card.querySelector(".say").onclick = () => ctx.speak(prompt.replace(/[^\w\s'!?.,…]/g, "").trim());
+    ctx.shell.card.querySelector(".say").onclick = () => say(lastSaid);
   }
   const fb = (txt, col = "#6bb57c") => { const f = ctx.shell.card.querySelector(".feedback"); if (f) { f.style.color = col; f.textContent = txt; } };
 
@@ -70,12 +72,12 @@ export function createFireflyPond() {
     const target = Math.floor(Math.random() * n);
     frame("Watch the golden firefly! ✨", flies.map((p, i) => `<div class="ffly${i === target ? " gold" : ""}" data-i="${i}" style="left:${p.x}%;top:${p.y}%"><i></i></div>`).join(""));
     const els = [...ctx.shell.card.querySelectorAll(".ffly")];
-    await ctx.speak("Watch the golden firefly!");
+    await say("Watch the golden firefly!");
     if (!alive(my)) return false;
     await wait(1200); if (!alive(my)) return false;
     els.forEach(e => e.classList && e.classList.remove("gold"));
     const pr = ctx.shell.card.querySelector(".prompt"); if (pr) pr.textContent = "Keep watching… 👀";
-    ctx.speak("Keep watching!");
+    say("Keep watching!");
     // drift slowly, bouncing gently inside the box
     await new Promise(res => {
       let last = performance.now(); const end = last + secs * 1000;
@@ -95,13 +97,13 @@ export function createFireflyPond() {
     });
     if (!alive(my)) return false;
     if (pr) pr.textContent = "Which one was golden? Tap it! 👆";
-    ctx.speak("Which one was golden? Tap it!");
+    say("Which one was golden? Tap it!");
     let wrong = 0;
     await new Promise(res => els.forEach((e, i) => e.onclick = () => {
       if (!alive(my) || e.disabled) return;
       if (i === target) {
         e.classList.add("gold", "found"); els.forEach(x => x.onclick = null);
-        fb("You found it! ✨"); ctx.ping(1.5); ctx.speak("You found it!"); res();
+        fb("You found it! ✨"); ctx.ping(1.5); say("You found it!"); res();
       } else {
         wrong++; e.classList.add("dim"); e.disabled = true;
         fb(wrong >= 2 ? "It's this one — look, it's glowing! 💛" : "Not that one — try again 💛", "#d9879c");
@@ -115,14 +117,18 @@ export function createFireflyPond() {
   // which one is different?
   async function odd(my) {
     const pool = (cfg.odd || []).filter(o => o.same && o.odd);
-    const o = pool.length ? pool[Math.floor(Math.random() * pool.length)] : { same: "🐸", odd: "🐢", count: 5 };
+    // a different pair each time within a visit (until they've all been used)
+    let left = pool.filter(p => !usedOdd.includes(p));
+    if (!left.length) { usedOdd = []; left = pool; }
+    const o = left.length ? left[Math.floor(Math.random() * left.length)] : { same: "🐸", odd: "🐢", count: 5 };
+    usedOdd.push(o);
     const n = Math.max(3, Math.min(9, o.count || 5)), at = Math.floor(Math.random() * n);
     frame("Which one is different? 🔍", `<div class="oddrow">${Array.from({ length: n }, (_, i) => `<button class="oddb" data-i="${i}">${i === at ? o.odd : o.same}</button>`).join("")}</div>`);
-    ctx.speak("Which one is different?");
+    say("Which one is different?");
     const btns = [...ctx.shell.card.querySelectorAll(".oddb")];
     await new Promise(res => btns.forEach((b, i) => b.onclick = () => {
       if (!alive(my) || b.disabled) return;
-      if (i === at) { b.classList.add("ok"); btns.forEach(x => x.onclick = null); fb("Yes! That one is different! 🌟"); ctx.ping(1.5); ctx.speak("Yes! That one is different!"); res(); }
+      if (i === at) { b.classList.add("ok"); btns.forEach(x => x.onclick = null); fb("Yes! That one is different! 🌟"); ctx.ping(1.5); say("Yes! That one is different!"); res(); }
       else { b.classList.add("dim", "shake"); b.disabled = true; fb("Look closely… 💛", "#d9879c"); }
     }));
     await wait(1500);
@@ -133,17 +139,17 @@ export function createFireflyPond() {
   async function breathe(my) {
     const b = cfg.breathe || {}, cycles = b.cycles || 3, inS = b.inSeconds || 4, outS = b.outSeconds || 4;
     frame("Let's breathe with the firefly 🌙", `<div class="bubble"></div><div class="btext"></div>`);
-    await ctx.speak("Let's breathe slowly with the firefly.");
+    await say("Let's breathe slowly with the firefly.");
     const bub = ctx.shell.card.querySelector(".bubble"), tx = ctx.shell.card.querySelector(".btext");
     for (let c = 0; c < cycles; c++) {
       if (!alive(my)) return false;
-      bub.style.transition = `transform ${inS}s ease-in-out`; bub.style.transform = "scale(1.8)"; tx.textContent = "Breathe in… 🌬️"; ctx.speak("Breathe in");
+      bub.style.transition = `transform ${inS}s ease-in-out`; bub.style.transform = "scale(1.8)"; tx.textContent = "Breathe in… 🌬️"; say("Breathe in");
       await wait(inS * 1000); if (!alive(my)) return false;
-      bub.style.transition = `transform ${outS}s ease-in-out`; bub.style.transform = "scale(1)"; tx.textContent = "Breathe out…"; ctx.speak("Breathe out");
+      bub.style.transition = `transform ${outS}s ease-in-out`; bub.style.transform = "scale(1)"; tx.textContent = "Breathe out…"; say("Breathe out");
       await wait(outS * 1000);
     }
     if (!alive(my)) return false;
-    tx.textContent = "So calm. Well done 🌙"; ctx.speak("So calm. Well done.");
+    tx.textContent = "So calm. Well done 🌙"; say("So calm. Well done.");
     await wait(1800);
     return alive(my);
   }
@@ -166,7 +172,7 @@ export function createFireflyPond() {
     ctx.shell.render(`${dots(plan.length, plan.length)}<div class="big">✨</div>
       <div class="prompt" style="margin:8px 10px">Beautiful focus! The fireflies are dancing for you!</div>
       <button class="btn back">Back to the island 🏝️</button>`);
-    ctx.speak("Beautiful focus! The fireflies are dancing for you!");
+    say("Beautiful focus! The fireflies are dancing for you!");
     ctx.shell.card.querySelector(".back").onclick = () => ctx.shell.leave();
   }
 
@@ -179,6 +185,11 @@ export function createFireflyPond() {
     start(c) {
       ctx = c; cfg = c.content || {};
       plan = (cfg.rounds && cfg.rounds.length ? cfg.rounds : ["follow", "odd", "breathe"]).filter(r => ["follow", "odd", "breathe"].includes(r));
+      if (cfg.shuffle) {                                   // mix the order each visit; breathing stays last as a calm ending
+        const calm = plan.filter(r => r === "breathe");
+        plan = [...shuffle(plan.filter(r => r !== "breathe")), ...calm];
+      }
+      usedOdd = [];
       entry = { monument: "firefly-pond", contentVersion: c.contentVersion, start: Date.now(), rounds: [], completed: false };
       play();
     },

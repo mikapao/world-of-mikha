@@ -88,6 +88,8 @@ All questions live in `public/content/`:
 | `focus.json` | ✨ Firefly Pond (follow the firefly, odd one out, breathing) |
 | `index.json` | list of files + the **version number** |
 
+Each challenge has a pool of 25 (Firefly Pond: 10 tasks) and picks 10 at random every visit — set by `questionsPerVisit` / `wordsPerVisit` in each file.
+
 To change them, you can even do it right on the GitHub website (open the file, click the ✏️ pencil):
 
 1. Edit the questions. Keep the same shape as the existing ones. Each question needs its own `id`.
@@ -116,7 +118,19 @@ git push
 
 A new APK appears in Releases a few minutes later.
 
-## 7. Parent tips
+## 7. The voice (Emma)
+
+The cloud build records every sentence the game says with **Kokoro**, a free open-source
+(Apache-2.0) AI voice — British female voice "Emma" — and packs the little MP3s into the app,
+so the voice sounds the same, natural and friendly, on every tablet, even offline.
+- Lines come from `src/voiceLines.js` plus the question files, so new questions get recorded automatically.
+- New questions sent through GitHub Pages (no new APK) get their clips from the Pages build too.
+- Anything without a clip uses the tablet's own voice as a backup.
+- On your PC (`npm run dev`) there are no clips, so you'll hear the computer's voice — that's normal.
+- Want a different voice? In both workflow files, add `VOICE: bf_isabella` (or `bf_alice`, `bf_lily`)
+  under `env:`; everything is re-recorded on the next build.
+
+## 8. Parent tips
 
 - **Trophies:** bottom-right shows one trophy per monument. Grey = not finished yet today (this play session), gold = finished. They reset each time the app is opened.
 
@@ -146,7 +160,9 @@ src/world/             home island, bridges, Crystal Isle, Winter Wonderland, Ca
 src/monuments/         one file per monument (challenge + its 3D model)
 src/ui/                title, trophy shelf, avatar picker, challenge window, parent corner
 src/sound.js           squeak + ping (made in code)
-src/speech.js          reads words aloud
+src/speech.js          reads words aloud (recorded Emma clips first, tablet voice as backup)
+src/voiceLines.js      every fixed sentence the game says (recorded by the cloud build)
+scripts/               voice recording: voice-lines.mjs lists sentences, make_voice.py records them
 src/mic.js             microphone loudness for the Singing Stone
 src/storage.js         scores saved on the tablet
 src/settings.js        grown-up settings (brightness)

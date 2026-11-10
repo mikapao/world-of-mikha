@@ -67,6 +67,8 @@ export function createSnowman() {
   let ctx = null, entry = null, list = [], qi = 0, tries = 0, run = 0, busy = false, distract = [];
   let phasePrompt = "";
   const alive = myRun => myRun === run && ctx.shell.isOpen();
+  let lastSaid = "";
+  const say = t => { lastSaid = t; return ctx.speak(t); };   // 🔊 repeats the last line
 
   function render(q, cards, prompt, extra = "") {
     phasePrompt = prompt;
@@ -75,7 +77,7 @@ export function createSnowman() {
       <div class="prompt">${prompt}</div>
       <div class="mrow">${cards}</div>
       ${extra}`);
-    ctx.shell.card.querySelector(".say").onclick = () => ctx.speak(phasePrompt.replace(/<[^>]+>|[^\w\s'!?.,]/g, "").trim());
+    ctx.shell.card.querySelector(".say").onclick = () => say(lastSaid);
   }
 
   async function round() {
@@ -88,14 +90,14 @@ export function createSnowman() {
     const showMs = (ctx.content && ctx.content.showSeconds || 5) * 1000;
     render(q, items.map(e => `<div class="mcard">${e}</div>`).join(""), "Look carefully! 👀",
       `<div class="tbar"><div style="animation-duration:${showMs}ms"></div></div>`);
-    await ctx.speak("Look carefully! Remember them all.");
+    await say("Look carefully! Remember them all.");
     if (!alive(myRun)) return;
     await wait(Math.max(1200, showMs - 2500));
     if (!alive(myRun)) return;
 
     // 2. snow covers everything
     render(q, items.map(() => `<div class="mcard snow">❄️</div>`).join(""), "Whoosh! Snow is falling… ❄️");
-    ctx.speak("Whoosh! Snow is falling!");
+    say("Whoosh! Snow is falling!");
     await wait(1800);
     if (!alive(myRun)) return;
 
@@ -106,7 +108,7 @@ export function createSnowman() {
       "What is missing? 🤔",
       `<div class="choices">${choices.map(c => `<button class="choice mchoice" data-v="${c}">${c}</button>`).join("")}</div>
        <div class="feedback"></div>`);
-    ctx.speak("What is missing?");
+    say("What is missing?");
     ctx.shell.card.querySelectorAll(".mchoice").forEach(b => b.onclick = () => answer(b, q, missing, myRun));
   }
 
@@ -121,7 +123,7 @@ export function createSnowman() {
       if (empty) { empty.textContent = missing; empty.classList.remove("empty"); empty.classList.add("found"); }
       const cheer = [["You remembered! 🌟", "You remembered!"], ["Super memory! ⛄", "Super memory!"], ["Brilliant! ❄️", "Brilliant!"]][qi % 3];
       fb.style.color = "#6bb57c"; fb.textContent = cheer[0];
-      setTimeout(() => ctx.ping(1.5), 140); ctx.speak(cheer[1]);
+      setTimeout(() => ctx.ping(1.5), 140); say(cheer[1]);
       entry.questions.push({ id: q.id, attempts: tries });
       setTimeout(() => { if (!alive(myRun)) return; qi++; qi < list.length ? round() : finish(); }, 1600);
     } else {

@@ -1,6 +1,6 @@
 {
-  "_help": "Memory Snowman rounds. 'items' = the things Mikha sees (2–6 emoji; 3–4 is right for age 5). One is hidden at random, or set 'missing' to choose which. 'distractors' are extra wrong answers for the buttons. 'showSeconds' = how long the items stay visible.",
-  "questionsPerVisit": 5,
+  "_help": "Memory Snowman rounds (pool of 25 — 10 are picked at random each visit). 'items' = the things Mikha sees (2–6 emoji; 3–4 is right for age 5). One is hidden at random, or set 'missing' to choose which. 'distractors' are extra wrong answers for the buttons. 'showSeconds' = how long the items stay visible.",
+  "questionsPerVisit": 10,
   "showSeconds": 5,
   "distractors": [
     "🍎",
@@ -16,7 +16,11 @@
     "🦋",
     "🍓",
     "☀️",
-    "🐶"
+    "🐶",
+    "🍌",
+    "🚲",
+    "🐰",
+    "🌈"
   ],
   "questions": [
     {
@@ -63,7 +67,7 @@
     {
       "id": "w6",
       "items": [
-        "🐻‍❄️",
+        "🐻",
         "🦊",
         "🐰"
       ]
@@ -100,6 +104,130 @@
         "🐶",
         "🐱",
         "🐟"
+      ]
+    },
+    {
+      "id": "w11",
+      "items": [
+        "🍓",
+        "🍒",
+        "🍋"
+      ]
+    },
+    {
+      "id": "w12",
+      "items": [
+        "🐸",
+        "🐢",
+        "🐌"
+      ]
+    },
+    {
+      "id": "w13",
+      "items": [
+        "⚽",
+        "🏀",
+        "🎾"
+      ]
+    },
+    {
+      "id": "w14",
+      "items": [
+        "🌙",
+        "⭐",
+        "☀️",
+        "🌈"
+      ]
+    },
+    {
+      "id": "w15",
+      "items": [
+        "🦁",
+        "🐯",
+        "🐵"
+      ]
+    },
+    {
+      "id": "w16",
+      "items": [
+        "🎈",
+        "🎂",
+        "🎁"
+      ]
+    },
+    {
+      "id": "w17",
+      "items": [
+        "🐞",
+        "🐝",
+        "🦋",
+        "🐛"
+      ]
+    },
+    {
+      "id": "w18",
+      "items": [
+        "🍕",
+        "🍔",
+        "🍟"
+      ]
+    },
+    {
+      "id": "w19",
+      "items": [
+        "🚀",
+        "🛸",
+        "🌍"
+      ]
+    },
+    {
+      "id": "w20",
+      "items": [
+        "🧸",
+        "🎨",
+        "🧩"
+      ]
+    },
+    {
+      "id": "w21",
+      "items": [
+        "🐮",
+        "🐷",
+        "🐔",
+        "🐑"
+      ]
+    },
+    {
+      "id": "w22",
+      "items": [
+        "🌻",
+        "🌷",
+        "🌹"
+      ]
+    },
+    {
+      "id": "w23",
+      "items": [
+        "🍦",
+        "🍩",
+        "🍭"
+      ]
+    },
+    {
+      "id": "w24",
+      "items": [
+        "🦒",
+        "🦓",
+        "🐘"
+      ]
+    },
+    {
+      "id": "w25",
+      "items": [
+        "🎺",
+        "🥁",
+        "🎸",
+        "🎹"
       ]
     }
   ]

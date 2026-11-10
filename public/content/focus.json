@@ -1,7 +1,14 @@
 {
-  "_help": "Firefly Pond (focus, no score). 'rounds' = the activities in order: follow, odd, breathe (repeat any you like). 'odd' = pairs for 'Which one is different?'.",
+  "_help": "Firefly Pond (focus, no score). 10 tasks per visit. 'rounds' = the activities: follow, odd, breathe. With 'shuffle': true they're mixed in a random order each visit (breathe always stays last as a calm ending). 'odd' = pairs for 'Which one is different?' (a different pair is picked each time).",
   "rounds": [
     "follow",
+    "follow",
+    "follow",
+    "follow",
+    "odd",
+    "odd",
+    "odd",
+    "odd",
     "odd",
     "breathe"
   ],
@@ -50,6 +57,31 @@
       "same": "🍀",
       "odd": "🌿",
       "count": 6
+    },
+    {
+      "id": "o7",
+      "same": "🌸",
+      "odd": "🌼",
+      "count": 6
+    },
+    {
+      "id": "o8",
+      "same": "🐟",
+      "odd": "🐠",
+      "count": 5
+    },
+    {
+      "id": "o9",
+      "same": "⭐",
+      "odd": "🌟",
+      "count": 6
+    },
+    {
+      "id": "o10",
+      "same": "🍎",
+      "odd": "🍏",
+      "count": 5
     }
-  ]
+  ],
+  "shuffle": true
 }

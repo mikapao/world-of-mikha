@@ -1,7 +1,7 @@
 // Parent corner — press & hold the ⚙︎ for 1.5 s. Scores per monument entry and per day.
 import { allEntries, clearEntries } from "../storage.js";
 import { calibrate, baselineDb } from "../mic.js";
-import { englishVoices, currentVoiceName, chooseVoice, speak } from "../speech.js";
+import { englishVoices, currentVoiceName, chooseVoice, speak, hasClips, CLIP_VOICE } from "../speech.js";
 import { getBrightness, setBrightness, getMusicVolume, setMusicVolume } from "../settings.js";
 
 const gear = document.getElementById("gear");
@@ -65,6 +65,55 @@ function voiceSection(list) {
     <table><tr><th>When</th><th>Voice level</th><th>Brave</th><th>Each word (loudest)</th></tr>${entryRows}</table>`;
 }
 
+// ---- overall summary across all challenges ----
+const DAY = 864e5;
+const avgOf = a => a.length ? Math.round(a.reduce((s, x) => s + x, 0) / a.length) : null;
+const mainNum = (m, e) => m.scoring === "attempts" ? e.score : m.scoring === "voice" ? e.avgPeak : null;
+function trend(nums) {                       // last 3 vs the 3 before
+  if (nums.length < 4) return "—";
+  const a = avgOf(nums.slice(0, 3)), b = avgOf(nums.slice(3, 6));
+  return a > b + 3 ? "↗️ up" : a < b - 3 ? "↘️ down" : "➡️ steady";
+}
+function ago(ts) {
+  const d = Math.floor((Date.now() - ts) / DAY);
+  return d <= 0 ? "today " + fmtTime(ts) : d === 1 ? "yesterday" : d + " days ago";
+}
+function summarySection(all) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const periods = [["Today", e => e.start >= today.getTime()], ["Last 7 days", e => e.start >= Date.now() - 7 * DAY], ["All time", () => true]];
+  const cards = periods.map(([label, f]) => {
+    const l = all.filter(f), done = l.filter(e => e.completed);
+    const kinds = new Set(done.map(e => e.monument)).size;
+    const mins = Math.round(l.reduce((s, e) => s + Math.max(0, (e.end || e.start) - e.start), 0) / 60000);
+    return `<div class="scard"><div class="sl">${label}</div><div class="sv">${done.length}</div>
+      <div class="muted">challenges finished<br>${kinds}/${monuments.length} different · ${l.length} visits · ${mins} min</div></div>`;
+  }).join("");
+  const scored = monuments.filter(m => m.scoring === "attempts");
+  const learnAvgs = scored.map(m => avgOf(all.filter(e => e.monument === m.id && e.completed).map(e => e.score))).filter(v => v !== null);
+  const learn = avgOf(learnAvgs);
+  const voiceAll = all.filter(e => e.monument === "singing-stone" && e.completed).map(e => e.avgPeak);
+  const voice = avgOf(voiceAll);
+  const rows = monuments.map(m => {
+    const l = all.filter(e => e.monument === m.id), done = l.filter(e => e.completed);
+    const nums = done.map(e => mainNum(m, e)).filter(v => v !== null && v !== undefined);   // newest first
+    const unit = m.scoring === "attempts" ? "%" : "";
+    const avg = m.scoring === "visits" ? "—" : (avgOf(nums) === null ? "—" : avgOf(nums) + unit);
+    const best = m.scoring === "visits" || !nums.length ? "—" : Math.max(...nums) + unit;
+    return `<tr><td>${m.emoji} ${m.name}</td><td>${l.length}</td><td>${done.length}</td>
+      <td><b>${avg}</b></td><td>${best}</td><td>${m.scoring === "visits" ? "—" : trend(nums)}</td><td class="muted">${l.length ? ago(l[0].start) : "never"}</td></tr>`;
+  }).join("");
+  return `<div class="pmon psum"><h3>📊 Summary</h3>
+    <div class="scards">${cards}</div>
+    <div class="scards">
+      <div class="scard big"><div class="sl">Overall learning score</div><div class="sv">${learn === null ? "—" : learn + "%"}</div>
+        <div class="muted">average of Memory, Vocabulary &amp; Math scores<br>(100% = everything right on the first try)</div></div>
+      <div class="scard big"><div class="sl">Average voice level</div><div class="sv">${voice === null ? "—" : voice}</div>
+        <div class="muted">Singing Stone, 0–100<br>55+ = brave voice</div></div>
+    </div>
+    <table><tr><th>Challenge</th><th>Visits</th><th>Finished</th><th>Average</th><th>Best</th><th>Trend</th><th>Last played</th></tr>${rows}</table>
+    <div class="muted" style="margin-top:6px">Averages use finished visits. Trend compares the last 3 finished visits with the 3 before. Details for each challenge are below.</div></div>`;
+}
+
 function calibrateBox() {
   return `<div class="row" style="justify-content:flex-start;align-items:center">
     <button class="btn sec" id="calib">🎤 Calibrate microphone</button>
@@ -86,6 +135,10 @@ export async function openParent() {
   }).join("");
   pcard.innerHTML = `<h2>Parent corner</h2>
     <div class="muted">Scores are only shown here — Mikha just sees gentle feedback.</div>
+    ${summarySection(all)}
+    <h3 style="margin-top:22px;font-size:20px">📋 Challenge details</h3>
+    ${sections}
+    <h3 style="margin-top:26px;font-size:20px">⚙️ Settings</h3>
     <div class="pmon"><h3>🔆 Brightness</h3>
       <div class="row" style="justify-content:flex-start;align-items:center;gap:14px">
         <span>🌙</span><input type="range" id="bright" min="50" max="100" step="5" value="${Math.round(getBrightness() * 100)}" style="flex:1;max-width:320px;accent-color:#7cc6e8">
@@ -100,9 +153,8 @@ export async function openParent() {
       <div class="row" style="justify-content:flex-start;align-items:center;flex-wrap:wrap">
         <select id="voiceSel" style="font-size:16px;padding:8px;border-radius:12px;border:1px solid #dde6ec;max-width:100%"></select>
         <button class="btn sec" id="voiceTest">▶ Test</button></div>
-      <div class="muted">Best matches (friendly female, British English) are at the top. If none are listed, install
-        "English (United Kingdom)" voices in the tablet's Settings → Text-to-speech.</div></div>
-    ${sections}
+      <div class="muted">🌟 Emma is the recorded voice built into the app (best quality). The tablet's own voices are listed below it —
+        best matches (female, British English) first.</div></div>
     <div class="row"><button class="btn warn" id="clr">Clear data</button><button class="btn sec" id="pclose">Close</button></div>`;
   parentOverlay.classList.add("show");
   document.getElementById("pclose").onclick = closeParent;
@@ -113,8 +165,9 @@ export async function openParent() {
   const sel = document.getElementById("voiceSel");
   englishVoices().then(vs => {
     const cur = currentVoiceName();
-    sel.innerHTML = vs.length ? vs.map(v => `<option value="${v.name.replace(/"/g, "&quot;")}" ${v.name === cur ? "selected" : ""}>${v.name} (${v.lang})</option>`).join("")
-                              : `<option>Tablet default voice</option>`;
+    const emma = hasClips() ? `<option value="${CLIP_VOICE}" ${cur === CLIP_VOICE ? "selected" : ""}>🌟 Emma — World of Mikha voice (recorded, works offline)</option>` : "";
+    sel.innerHTML = emma + (vs.length ? vs.map(v => `<option value="${v.name.replace(/"/g, "&quot;")}" ${v.name === cur ? "selected" : ""}>Tablet voice: ${v.name} (${v.lang})</option>`).join("")
+                              : `<option>Tablet default voice</option>`);
   });
   sel.onchange = () => { chooseVoice(sel.value); speak("Hello Mikha! Let's play!"); };
   document.getElementById("voiceTest").onclick = () => speak("Hello Mikha! Let's play!");

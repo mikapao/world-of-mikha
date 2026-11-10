@@ -1,27 +1,26 @@
 {
-  "_help": "Counting Waterfall questions. type: count (n items), add (a + b), sub (a take away b). 'choices' are the 3 number buttons; 'answer' must be one of them.",
-  "questionsPerVisit": 5,
+  "_help": "Counting Waterfall questions (pool of 25 — 10 are picked at random each visit). type: count (n items), add (a + b), sub (a take away b). 'choices' are the 3 number buttons; 'answer' must be one of them.",
+  "questionsPerVisit": 10,
   "questions": [
     {
       "id": "m1",
       "type": "count",
       "prompt": "How many fish?",
       "emoji": "🐟",
-      "n": 4,
-      "answer": 4,
+      "n": 2,
+      "answer": 2,
       "choices": [
-        3,
-        4,
-        5
+        1,
+        2,
+        3
       ]
     },
     {
       "id": "m2",
-      "type": "add",
-      "prompt": "2 ducks and 1 more duck. How many ducks?",
+      "type": "count",
+      "prompt": "How many ducks?",
       "emoji": "🦆",
-      "a": 2,
-      "b": 1,
+      "n": 3,
       "answer": 3,
       "choices": [
         2,
@@ -34,6 +33,32 @@
       "type": "count",
       "prompt": "How many butterflies?",
       "emoji": "🦋",
+      "n": 4,
+      "answer": 4,
+      "choices": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "m4",
+      "type": "count",
+      "prompt": "How many apples?",
+      "emoji": "🍎",
+      "n": 5,
+      "answer": 5,
+      "choices": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "m5",
+      "type": "count",
+      "prompt": "How many stars?",
+      "emoji": "⭐",
       "n": 6,
       "answer": 6,
       "choices": [
@@ -43,26 +68,11 @@
       ]
     },
     {
-      "id": "m4",
-      "type": "sub",
-      "prompt": "5 apples. 2 are eaten. How many are left?",
-      "emoji": "🍎",
-      "a": 5,
-      "b": 2,
-      "answer": 3,
-      "choices": [
-        2,
-        3,
-        4
-      ]
-    },
-    {
-      "id": "m5",
-      "type": "add",
-      "prompt": "3 stars and 4 stars. How many stars?",
-      "emoji": "⭐",
-      "a": 3,
-      "b": 4,
+      "id": "m6",
+      "type": "count",
+      "prompt": "How many flowers?",
+      "emoji": "🌸",
+      "n": 7,
       "answer": 7,
       "choices": [
         6,
@@ -71,11 +81,65 @@
       ]
     },
     {
-      "id": "m6",
+      "id": "m7",
       "type": "count",
-      "prompt": "How many flowers?",
-      "emoji": "🌸",
-      "n": 3,
+      "prompt": "How many balloons?",
+      "emoji": "🎈",
+      "n": 8,
+      "answer": 8,
+      "choices": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "id": "m8",
+      "type": "count",
+      "prompt": "How many cats?",
+      "emoji": "🐱",
+      "n": 9,
+      "answer": 9,
+      "choices": [
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "id": "m9",
+      "type": "count",
+      "prompt": "How many frogs?",
+      "emoji": "🐸",
+      "n": 10,
+      "answer": 10,
+      "choices": [
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "id": "m10",
+      "type": "add",
+      "prompt": "1 cookie and 1 more. How many cookies?",
+      "emoji": "🍪",
+      "a": 1,
+      "b": 1,
+      "answer": 2,
+      "choices": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "m11",
+      "type": "add",
+      "prompt": "2 bees and 1 more. How many bees?",
+      "emoji": "🐝",
+      "a": 2,
+      "b": 1,
       "answer": 3,
       "choices": [
         2,
@@ -84,13 +148,13 @@
       ]
     },
     {
-      "id": "m7",
-      "type": "sub",
-      "prompt": "4 balloons. 1 flies away. How many are left?",
-      "emoji": "🎈",
-      "a": 4,
-      "b": 1,
-      "answer": 3,
+      "id": "m12",
+      "type": "add",
+      "prompt": "1 car and 3 more. How many cars?",
+      "emoji": "🚗",
+      "a": 1,
+      "b": 3,
+      "answer": 4,
       "choices": [
         3,
         4,
@@ -98,12 +162,180 @@
       ]
     },
     {
-      "id": "m8",
+      "id": "m13",
       "type": "add",
-      "prompt": "1 cat and 1 more cat. How many cats?",
-      "emoji": "🐱",
-      "a": 1,
+      "prompt": "2 ladybugs and 2 more. How many ladybugs?",
+      "emoji": "🐞",
+      "a": 2,
+      "b": 2,
+      "answer": 4,
+      "choices": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "m14",
+      "type": "add",
+      "prompt": "3 strawberries and 2 more. How many strawberries?",
+      "emoji": "🍓",
+      "a": 3,
+      "b": 2,
+      "answer": 5,
+      "choices": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "m15",
+      "type": "add",
+      "prompt": "4 bunnies and 1 more. How many bunnies?",
+      "emoji": "🐰",
+      "a": 4,
       "b": 1,
+      "answer": 5,
+      "choices": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "m16",
+      "type": "add",
+      "prompt": "3 turtles and 3 more. How many turtles?",
+      "emoji": "🐢",
+      "a": 3,
+      "b": 3,
+      "answer": 6,
+      "choices": [
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "m17",
+      "type": "add",
+      "prompt": "2 fish and 5 more. How many fish?",
+      "emoji": "🐟",
+      "a": 2,
+      "b": 5,
+      "answer": 7,
+      "choices": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "id": "m18",
+      "type": "sub",
+      "prompt": "3 ducks. 1 flies away. How many are left?",
+      "emoji": "🦆",
+      "a": 3,
+      "b": 1,
+      "answer": 2,
+      "choices": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "m19",
+      "type": "sub",
+      "prompt": "4 butterflies. 2 fly away. How many are left?",
+      "emoji": "🦋",
+      "a": 4,
+      "b": 2,
+      "answer": 2,
+      "choices": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "m20",
+      "type": "sub",
+      "prompt": "5 apples. 1 is eaten. How many are left?",
+      "emoji": "🍎",
+      "a": 5,
+      "b": 1,
+      "answer": 4,
+      "choices": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "m21",
+      "type": "sub",
+      "prompt": "5 stars. 3 fade away. How many are left?",
+      "emoji": "⭐",
+      "a": 5,
+      "b": 3,
+      "answer": 2,
+      "choices": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "m22",
+      "type": "sub",
+      "prompt": "6 flowers. 2 are picked. How many are left?",
+      "emoji": "🌸",
+      "a": 6,
+      "b": 2,
+      "answer": 4,
+      "choices": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "m23",
+      "type": "sub",
+      "prompt": "4 balloons. 1 flies away. How many are left?",
+      "emoji": "🎈",
+      "a": 4,
+      "b": 1,
+      "answer": 3,
+      "choices": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "m24",
+      "type": "sub",
+      "prompt": "7 cats. 3 go home. How many are left?",
+      "emoji": "🐱",
+      "a": 7,
+      "b": 3,
+      "answer": 4,
+      "choices": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "m25",
+      "type": "sub",
+      "prompt": "6 frogs. 4 hop away. How many are left?",
+      "emoji": "🐸",
+      "a": 6,
+      "b": 4,
       "answer": 2,
       "choices": [
         1,
