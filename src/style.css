@@ -191,3 +191,11 @@ th{color:#8396a5;font-weight:600;font-size:13px}
 .scard .sl{font-size:14px;color:#7a8a98;font-weight:700}
 .scard .sv{font-size:34px;font-weight:700;color:#3f4d5a;line-height:1.1}
 .scard.big .sv{font-size:40px;color:#4f8fbf}
+
+/* Keep corner buttons clear of the iPhone notch / rounded corners when running full-screen */
+#title{top:calc(12px + env(safe-area-inset-top,0px));left:calc(16px + env(safe-area-inset-left,0px))}
+#gear{top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px))}
+#trophies{bottom:calc(12px + env(safe-area-inset-bottom,0px));right:calc(12px + env(safe-area-inset-right,0px))}
+#pad{bottom:calc(22px + env(safe-area-inset-bottom,0px));left:calc(22px + env(safe-area-inset-left,0px))}
+#hint{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+#enter{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
