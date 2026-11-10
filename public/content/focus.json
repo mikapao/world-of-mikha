@@ -1,0 +1,55 @@
+{
+  "_help": "Firefly Pond (focus, no score). 'rounds' = the activities in order: follow, odd, breathe (repeat any you like). 'odd' = pairs for 'Which one is different?'.",
+  "rounds": [
+    "follow",
+    "odd",
+    "breathe"
+  ],
+  "follow": {
+    "fireflies": 4,
+    "seconds": 6
+  },
+  "breathe": {
+    "cycles": 3,
+    "inSeconds": 4,
+    "outSeconds": 4
+  },
+  "odd": [
+    {
+      "id": "o1",
+      "same": "🐸",
+      "odd": "🐢",
+      "count": 5
+    },
+    {
+      "id": "o2",
+      "same": "🌙",
+      "odd": "⭐",
+      "count": 6
+    },
+    {
+      "id": "o3",
+      "same": "🍄",
+      "odd": "🌸",
+      "count": 5
+    },
+    {
+      "id": "o4",
+      "same": "🐞",
+      "odd": "🐝",
+      "count": 6
+    },
+    {
+      "id": "o5",
+      "same": "🦉",
+      "odd": "🐦",
+      "count": 5
+    },
+    {
+      "id": "o6",
+      "same": "🍀",
+      "odd": "🌿",
+      "count": 6
+    }
+  ]
+}

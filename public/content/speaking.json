@@ -1,0 +1,36 @@
+{
+  "_help": "Singing Stone words. 'say' is what Mikha repeats out loud; 'emoji' is the picture shown. Each word needs its own id.",
+  "wordsPerVisit": 5,
+  "words": [
+    {
+      "id": "s1",
+      "say": "apple",
+      "emoji": "🍎"
+    },
+    {
+      "id": "s2",
+      "say": "big red ball",
+      "emoji": "🔴"
+    },
+    {
+      "id": "s3",
+      "say": "hello",
+      "emoji": "👋"
+    },
+    {
+      "id": "s4",
+      "say": "thank you",
+      "emoji": "🙏"
+    },
+    {
+      "id": "s5",
+      "say": "little star",
+      "emoji": "⭐"
+    },
+    {
+      "id": "s6",
+      "say": "happy cat",
+      "emoji": "😺"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "version": 5,
+  "_help": "Bump 'version' by 1 every time you change any question file, so tablets know to download the new questions.",
+  "monuments": {
+    "counting-waterfall": "math.json",
+    "singing-stone": "speaking.json",
+    "memory-snowman": "memory.json",
+    "word-lollipop": "vocab.json",
+    "firefly-pond": "focus.json"
+  }
+}

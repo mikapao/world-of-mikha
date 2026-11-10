@@ -1,0 +1,106 @@
+{
+  "_help": "Memory Snowman rounds. 'items' = the things Mikha sees (2–6 emoji; 3–4 is right for age 5). One is hidden at random, or set 'missing' to choose which. 'distractors' are extra wrong answers for the buttons. 'showSeconds' = how long the items stay visible.",
+  "questionsPerVisit": 5,
+  "showSeconds": 5,
+  "distractors": [
+    "🍎",
+    "⭐",
+    "🐟",
+    "🎈",
+    "🌸",
+    "🍪",
+    "🧸",
+    "🔔",
+    "🚗",
+    "🐱",
+    "🦋",
+    "🍓",
+    "☀️",
+    "🐶"
+  ],
+  "questions": [
+    {
+      "id": "w1",
+      "items": [
+        "🧣",
+        "🎩",
+        "🥕"
+      ]
+    },
+    {
+      "id": "w2",
+      "items": [
+        "🧤",
+        "⛸️",
+        "☕"
+      ]
+    },
+    {
+      "id": "w3",
+      "items": [
+        "🐧",
+        "❄️",
+        "⛄"
+      ]
+    },
+    {
+      "id": "w4",
+      "items": [
+        "🍪",
+        "🥛",
+        "🧦"
+      ]
+    },
+    {
+      "id": "w5",
+      "items": [
+        "🎿",
+        "🛷",
+        "🧤",
+        "🧣"
+      ]
+    },
+    {
+      "id": "w6",
+      "items": [
+        "🐻‍❄️",
+        "🦊",
+        "🐰"
+      ]
+    },
+    {
+      "id": "w7",
+      "items": [
+        "🌲",
+        "⭐",
+        "🎁",
+        "🔔"
+      ]
+    },
+    {
+      "id": "w8",
+      "items": [
+        "🍎",
+        "🍌",
+        "🍇"
+      ]
+    },
+    {
+      "id": "w9",
+      "items": [
+        "🚗",
+        "🚂",
+        "✈️",
+        "🚲"
+      ]
+    },
+    {
+      "id": "w10",
+      "items": [
+        "🐶",
+        "🐱",
+        "🐟"
+      ]
+    }
+  ]
+}

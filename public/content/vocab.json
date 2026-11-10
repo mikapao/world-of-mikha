@@ -1,0 +1,107 @@
+{
+  "_help": "Giant Lollipop words. 'word' is what the voice says ('Find the cupcake!'), 'emoji' is the picture. Wrong answers are picked from the other words. Optional per word: 'choices': [emoji, emoji] to choose the wrong pictures yourself.",
+  "questionsPerVisit": 5,
+  "choicesPerQuestion": 3,
+  "words": [
+    {
+      "id": "v1",
+      "word": "cupcake",
+      "emoji": "🧁"
+    },
+    {
+      "id": "v2",
+      "word": "lollipop",
+      "emoji": "🍭"
+    },
+    {
+      "id": "v3",
+      "word": "ice cream",
+      "emoji": "🍦"
+    },
+    {
+      "id": "v4",
+      "word": "cookie",
+      "emoji": "🍪"
+    },
+    {
+      "id": "v5",
+      "word": "cake",
+      "emoji": "🍰"
+    },
+    {
+      "id": "v6",
+      "word": "candy",
+      "emoji": "🍬"
+    },
+    {
+      "id": "v7",
+      "word": "donut",
+      "emoji": "🍩"
+    },
+    {
+      "id": "v8",
+      "word": "chocolate",
+      "emoji": "🍫"
+    },
+    {
+      "id": "v9",
+      "word": "strawberry",
+      "emoji": "🍓"
+    },
+    {
+      "id": "v10",
+      "word": "cherry",
+      "emoji": "🍒"
+    },
+    {
+      "id": "v11",
+      "word": "grapes",
+      "emoji": "🍇"
+    },
+    {
+      "id": "v12",
+      "word": "watermelon",
+      "emoji": "🍉"
+    },
+    {
+      "id": "v13",
+      "word": "banana",
+      "emoji": "🍌"
+    },
+    {
+      "id": "v14",
+      "word": "apple",
+      "emoji": "🍎"
+    },
+    {
+      "id": "v15",
+      "word": "milk",
+      "emoji": "🥛"
+    },
+    {
+      "id": "v16",
+      "word": "honey",
+      "emoji": "🍯"
+    },
+    {
+      "id": "v17",
+      "word": "pancakes",
+      "emoji": "🥞"
+    },
+    {
+      "id": "v18",
+      "word": "popcorn",
+      "emoji": "🍿"
+    },
+    {
+      "id": "v19",
+      "word": "lemon",
+      "emoji": "🍋"
+    },
+    {
+      "id": "v20",
+      "word": "orange",
+      "emoji": "🍊"
+    }
+  ]
+}

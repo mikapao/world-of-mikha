@@ -1,0 +1,41 @@
+# Publishes the game + question files to GitHub Pages on every push.
+# - Tablets check  https://<you>.github.io/<repo>/content/  for newer questions.
+# - You can also play the browser version at  https://<you>.github.io/<repo>/
+# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+name: Publish web + questions
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      VITE_CONTENT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/content/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deploy
+        uses: actions/deploy-pages@v4

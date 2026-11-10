@@ -1,0 +1,23 @@
+Background music for World of Mikha
+===================================
+
+Put ONE music file in this folder named exactly:
+
+    bgm.mp3
+
+It plays on a loop during the game, softly, starting when Mikha taps ▶ Play.
+(No file here = no music; the game works fine without it.)
+
+Tips for a good BGM file
+- Calm, gentle instrumental music (no lyrics) – music box, soft piano, ukulele, lullaby-style.
+- 1–3 minutes long, made to loop smoothly (the end flows into the start).
+- MP3, 128 kbps, stereo – about 1–3 MB. Keep it under 5 MB so the app stays small.
+- Use music you're allowed to use: royalty-free / Creative Commons music, or a track you bought
+  a licence for. Check the licence says it's OK to use in an app.
+
+Volume
+- Grown-ups can change the music volume (or turn it off) in the parent corner (hold ⚙︎).
+- The music fades out completely when Mikha enters a challenge and comes back
+  when she leaves or finishes it (so voices and the microphone are clear).
+
+To change the song later: replace bgm.mp3 with a new file of the same name, then push to GitHub.

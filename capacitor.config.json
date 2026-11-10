@@ -1,0 +1,8 @@
+{
+  "appId": "com.worldofmikha.app",
+  "appName": "World of Mikha",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#4fb6d3"
+  }
+}

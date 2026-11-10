@@ -1,0 +1,115 @@
+{
+  "_help": "Counting Waterfall questions. type: count (n items), add (a + b), sub (a take away b). 'choices' are the 3 number buttons; 'answer' must be one of them.",
+  "questionsPerVisit": 5,
+  "questions": [
+    {
+      "id": "m1",
+      "type": "count",
+      "prompt": "How many fish?",
+      "emoji": "🐟",
+      "n": 4,
+      "answer": 4,
+      "choices": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "m2",
+      "type": "add",
+      "prompt": "2 ducks and 1 more duck. How many ducks?",
+      "emoji": "🦆",
+      "a": 2,
+      "b": 1,
+      "answer": 3,
+      "choices": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "m3",
+      "type": "count",
+      "prompt": "How many butterflies?",
+      "emoji": "🦋",
+      "n": 6,
+      "answer": 6,
+      "choices": [
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "m4",
+      "type": "sub",
+      "prompt": "5 apples. 2 are eaten. How many are left?",
+      "emoji": "🍎",
+      "a": 5,
+      "b": 2,
+      "answer": 3,
+      "choices": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "m5",
+      "type": "add",
+      "prompt": "3 stars and 4 stars. How many stars?",
+      "emoji": "⭐",
+      "a": 3,
+      "b": 4,
+      "answer": 7,
+      "choices": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "id": "m6",
+      "type": "count",
+      "prompt": "How many flowers?",
+      "emoji": "🌸",
+      "n": 3,
+      "answer": 3,
+      "choices": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "m7",
+      "type": "sub",
+      "prompt": "4 balloons. 1 flies away. How many are left?",
+      "emoji": "🎈",
+      "a": 4,
+      "b": 1,
+      "answer": 3,
+      "choices": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "m8",
+      "type": "add",
+      "prompt": "1 cat and 1 more cat. How many cats?",
+      "emoji": "🐱",
+      "a": 1,
+      "b": 1,
+      "answer": 2,
+      "choices": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>World of Mikha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div id="splash">
+    <div class="bubbles"></div>
+    <div class="splash-title" aria-label="World of Mikha"></div>
+    <div class="splash-sub">✨ a little world to play &amp; learn ✨</div>
+    <div class="sload"><div class="sbar"><div class="sfill"></div></div><div class="smsg">Opening the treasure map…</div></div>
+    <button class="splay">▶ Play</button>
+  </div>
+  <div id="title" aria-label="World of Mikha"></div>
+  <div id="hint">Hold your friend and slide — or use the circle — to walk ✨</div>
+  <div id="joy"><div id="knob"></div></div>
+  <div id="pad"><span class="parrow" style="top:6%;left:50%;transform:translateX(-50%)">▲</span><span class="parrow" style="bottom:6%;left:50%;transform:translateX(-50%)">▼</span><span class="parrow" style="left:7%;top:50%;transform:translateY(-50%)">◀</span><span class="parrow" style="right:7%;top:50%;transform:translateY(-50%)">▶</span><div class="pknob"></div></div>
+  <button id="enter">Enter</button>
+  <button id="gear" title="Parent corner (press and hold)">⚙︎</button>
+
+  <div class="overlay" id="challenge"><div class="card" id="ccard"></div></div>
+  <div class="overlay" id="pick"><div class="card" style="width:min(94vw,760px)">
+    <div class="prompt" style="margin:0 0 6px">Who do you want to be today?</div>
+    <div id="pickRow" style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap"></div>
+  </div></div>
+  <div class="overlay" id="parent"><div class="card" id="pcard"></div></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
