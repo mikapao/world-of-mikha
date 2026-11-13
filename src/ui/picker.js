@@ -1,6 +1,7 @@
 // "Who do you want to be today?" — each avatar spins on its own little 3D card.
 import * as THREE from "three";
 import { AVATARS } from "../avatars/index.js";
+import { nameOf } from "../avatars/names.js";
 
 export const pickOverlay = document.getElementById("pick");
 
@@ -11,7 +12,7 @@ export function showPicker(onPick) {
   AVATARS.forEach(a => {
     const btn = document.createElement("button"); btn.className = "pickc";
     const c = document.createElement("canvas"); c.width = 360; c.height = 378;
-    btn.appendChild(c); btn.insertAdjacentHTML("beforeend", `<div class="nm">${a.name}</div>`);
+    btn.appendChild(c); btn.insertAdjacentHTML("beforeend", `<div class="nm">${nameOf(a)}</div>`);
     row.appendChild(btn);
     try {
       const r = new THREE.WebGLRenderer({ canvas: c, antialias: true, alpha: true }); r.setSize(360, 378, false);

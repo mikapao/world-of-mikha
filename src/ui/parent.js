@@ -3,6 +3,7 @@ import { allEntries, clearEntries } from "../storage.js";
 import { calibrate, baselineDb } from "../mic.js";
 import { englishVoices, currentVoiceName, chooseVoice, speak, hasClips, CLIP_VOICE } from "../speech.js";
 import { getBrightness, setBrightness, getMusicVolume, setMusicVolume } from "../settings.js";
+import { nameOf, setName } from "../avatars/names.js";
 
 const gear = document.getElementById("gear");
 export const parentOverlay = document.getElementById("parent");
@@ -10,7 +11,20 @@ const pcard = document.getElementById("pcard");
 
 let monuments = [];
 let blocked = () => false;
-export function setupParentCorner(list, isBlocked) { monuments = list; blocked = isBlocked; }
+let avatarOpts = null;   // { avatars, currentAvatar(), switchAvatar(id) }
+export function setupParentCorner(list, isBlocked, opts = null) { monuments = list; blocked = isBlocked; avatarOpts = opts; }
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+function charactersSection() {
+  if (!avatarOpts) return "";
+  const cur = avatarOpts.currentAvatar();
+  return `<div class="pmon"><h3>🧸 Characters</h3>
+    <div class="muted">Rename a character, or switch who Mikha is playing as — right now, without leaving the game.</div>
+    ${avatarOpts.avatars.map(a => `<div class="crow">
+      <input class="cname" data-id="${a.id}" maxlength="16" value="${esc(nameOf(a))}" aria-label="Name for ${esc(a.name)}">
+      ${a.id === cur ? `<span class="cnow">✔ Playing now</span>` : `<button class="btn sec cplay" data-id="${a.id}">▶ Play as</button>`}
+    </div>`).join("")}
+    <div class="muted">Names are saved as you type. Emma's recorded voice knows the original names; a new name is said by the tablet voice.</div></div>`;
+}
 
 let holdStart = 0, holdRaf = 0;
 function tick() {
@@ -139,6 +153,7 @@ export async function openParent() {
     <h3 style="margin-top:22px;font-size:20px">📋 Challenge details</h3>
     ${sections}
     <h3 style="margin-top:26px;font-size:20px">⚙️ Settings</h3>
+    ${charactersSection()}
     <div class="pmon"><h3>🔆 Brightness</h3>
       <div class="row" style="justify-content:flex-start;align-items:center;gap:14px">
         <span>🌙</span><input type="range" id="bright" min="50" max="100" step="5" value="${Math.round(getBrightness() * 100)}" style="flex:1;max-width:320px;accent-color:#7cc6e8">
@@ -158,6 +173,12 @@ export async function openParent() {
     <div class="row"><button class="btn warn" id="clr">Clear data</button><button class="btn sec" id="pclose">Close</button></div>`;
   parentOverlay.classList.add("show");
   document.getElementById("pclose").onclick = closeParent;
+  pcard.querySelectorAll(".cname").forEach(inp => inp.oninput = () => setName(inp.dataset.id, inp.value));
+  pcard.querySelectorAll(".cplay").forEach(b => b.onclick = () => {
+    const keep = pcard.scrollTop;
+    avatarOpts.switchAvatar(b.dataset.id);
+    openParent().then(() => { pcard.scrollTop = keep; });
+  });
   const br = document.getElementById("bright");
   br.oninput = () => { setBrightness(br.value / 100); document.getElementById("brightVal").textContent = br.value + "%"; };
   const mu = document.getElementById("music");

@@ -57,7 +57,7 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
   align-items:center;justify-content:center;gap:8px}
 .confirm .row2{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .btn.stay{background:#93d3a2;box-shadow:0 5px 0 #6fb380}
-.pickc{border:none;background:#e9eef1;border-radius:28px;padding:8px 8px 12px;width:min(40vw,230px);box-shadow:0 6px 0 #dbe7ee;transition:transform .2s}
+.pickc{border:none;background:#e9eef1;border-radius:28px;padding:8px 8px 12px;width:min(28vw,220px);box-shadow:0 6px 0 #dbe7ee;transition:transform .2s}
 .pickc:active{transform:scale(.96)}
 .pickc canvas{width:100%;height:auto;aspect-ratio:1/1.05;display:block;border-radius:22px;background:linear-gradient(#dfeaf0,#efe4e8)}
 .pickc .nm{font-size:26px;font-weight:700;color:#4a5a6a;margin-top:4px}
@@ -199,3 +199,9 @@ th{color:#8396a5;font-weight:600;font-size:13px}
 #pad{bottom:calc(22px + env(safe-area-inset-bottom,0px));left:calc(22px + env(safe-area-inset-left,0px))}
 #hint{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
 #enter{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+
+/* Parent corner: characters */
+.crow{display:flex;align-items:center;gap:10px;margin:8px 0}
+.cname{flex:1;max-width:240px;font:inherit;font-size:18px;padding:8px 12px;border-radius:12px;border:1px solid #d8dfe5;background:#fff}
+.cnow{color:#5aa36b;font-weight:700;font-size:15px;min-width:110px}
+.crow .btn{margin-top:0;min-width:110px}

@@ -155,7 +155,8 @@ src/main.js            starts everything, game loop
 src/engine.js          renderer, camera, lights, 3D helpers
 src/player.js          walking, bouncing, footstep squeaks
 src/controls.js        steering: hold-and-slide on the avatar, or the joystick pad (bottom-left)
-src/avatars/           Kitty, Blibli (add new characters here)
+src/avatars/           Kitty, Blibli (built in code), Ponchi (public/avatars/ponchi.glb) — add new characters here
+scripts/make_ponchi.py builds ponchi.glb (low-poly model + Idle/Walk animations)
 src/world/             home island, bridges, Crystal Isle, Winter Wonderland, Candy island, Firefly meadow, ocean, lighting moods, red monument circles
 src/monuments/         one file per monument (challenge + its 3D model)
 src/ui/                title, trophy shelf, avatar picker, challenge window, parent corner

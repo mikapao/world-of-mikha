@@ -10,11 +10,13 @@ player.position.set(-1, 0, 2);
 scene.add(player);
 
 let av = AVATARS[0].build(); player.add(av.root);
-let hop = 0, walkT = 0, lastStep = 0;
+let hop = 0, walkT = 0, lastStep = 0, currentId = AVATARS[0].id;
+export const currentAvatarId = () => currentId;
 
 export function setAvatar(id) {
   const a = AVATARS.find(x => x.id === id) || AVATARS[0];
   player.remove(av.root); av = a.build(); player.add(av.root);
+  currentId = a.id;
   hop = 1;
 }
 

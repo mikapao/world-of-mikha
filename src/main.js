@@ -17,13 +17,15 @@ import { buildMeadowIsle, updateMeadowIsle } from "./world/meadowIsle.js";
 import { BR, BR3, BR4, BR5 } from "./world/layout.js";
 import { updateLighting, sunHeight } from "./world/lighting.js";
 import { createMonuments } from "./monuments/index.js";
-import { player, setAvatar, updatePlayer, stepOutOf } from "./player.js";
+import { player, setAvatar, updatePlayer, stepOutOf, currentAvatarId } from "./player.js";
 import { getMove, cancelDrag, setBlocked, pulseHint } from "./controls.js";
 import { shell } from "./ui/shell.js";
 import { buildTitle } from "./ui/title.js";
 import { buildTrophies, earnTrophy } from "./ui/trophies.js";
 import { showPicker, pickOverlay } from "./ui/picker.js";
 import { setupParentCorner, parentOverlay, closeParent } from "./ui/parent.js";
+import { AVATARS } from "./avatars/index.js";
+import { nameOf } from "./avatars/names.js";
 import { content, loadContent } from "./content.js";
 import { addEntry } from "./storage.js";
 
@@ -55,7 +57,11 @@ async function boot() {
   buildMeadowIsle();
   buildTitle("World of Mikha");
   buildTrophies(monuments);
-  setupParentCorner(monuments, uiOpen);
+  setupParentCorner(monuments, uiOpen, {
+    avatars: AVATARS,
+    currentAvatar: currentAvatarId,
+    switchAvatar: id => { setAvatar(id); const a = AVATARS.find(x => x.id === id); if (a) speak(`Hello, ${nameOf(a)}!`); }
+  });
   splash.progress(86, "Tuning the Singing Stone… 🎵");
   await Promise.all([upTo(contentP, 6000), upTo(voicesReady, 3000), upTo(document.fonts ? document.fonts.ready : null, 3000)]);
   splash.progress(94, "Almost there… 🌈"); await nextFrame();
@@ -66,7 +72,7 @@ async function boot() {
   splash.ready(() => {
     audio(); ping(1.2); startMusic();
     speak("Welcome to the World of Mikha!");
-    showPicker(a => { setAvatar(a.id); speak(`Hello, ${a.name}!`); pulseHint(); });
+    showPicker(a => { setAvatar(a.id); speak(`Hello, ${nameOf(a)}!`); pulseHint(); });
   });
 }
 boot();
