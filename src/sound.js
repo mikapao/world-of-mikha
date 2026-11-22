@@ -28,6 +28,21 @@ export function squeak(foot) {
   o.start(t); lfo.start(t); o.stop(t + 0.18); lfo.stop(t + 0.18);
 }
 
+/** Soft short upward "boing" for the double-tap hop */
+export function hopSound() {
+  const a = audio(); if (!a) return;
+  const t = a.currentTime;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = "sine";
+  o.frequency.setValueAtTime(330, t);
+  o.frequency.exponentialRampToValueAtTime(700, t + 0.14);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.06, t + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0008, t + 0.2);
+  o.connect(g).connect(a.destination);
+  o.start(t); o.stop(t + 0.22);
+}
+
 /** Cute bell-like ping (pitch 1 = normal, 1.5 = happy higher ping) */
 export function ping(pitch = 1) {
   const a = audio(); if (!a) return;
