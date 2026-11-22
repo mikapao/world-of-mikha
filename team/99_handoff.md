@@ -52,3 +52,4 @@ Merging runs both cloud builds. The first one takes longer because every line is
 - Cause: the 18 animals are built from **141 separate meshes**, and the land ones cast shadows, so each is drawn twice. That adds ~110+ draw calls per frame. Big screens (and tablets with sharp screens) also draw many pixels per frame, at up to 2× sharpness.
 - Proposed fix: new task T11 (see `01_plan.md` revision). Waiting for owner approval.
 - **Fixed by T11 (2026-11-22):** animals are merged into 1–5 draw calls each, and the frame is capped at about 2.5 M pixels. At 2560×1440 in the Claude pane: 36 → **60 fps** on every island. Waiting for the owner to retest in Edge.
+- **Owner retest (2026-11-22):** full-screen Edge on the high-res monitor is **smooth** after T11. Next: tablet Stage A, then merge for Stage B.
