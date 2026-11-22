@@ -4,128 +4,128 @@
   "words": [
     {
       "id": "s1",
-      "say": "apple",
+      "say": "I like red apples",
       "emoji": "🍎"
     },
     {
       "id": "s2",
-      "say": "banana",
-      "emoji": "🍌"
-    },
-    {
-      "id": "s3",
-      "say": "cat",
+      "say": "I see a cat",
       "emoji": "🐱"
     },
     {
-      "id": "s4",
-      "say": "dog",
+      "id": "s3",
+      "say": "I love my dog",
       "emoji": "🐶"
     },
     {
+      "id": "s4",
+      "say": "a yellow banana",
+      "emoji": "🍌"
+    },
+    {
       "id": "s5",
-      "say": "fish",
+      "say": "the fish can swim",
       "emoji": "🐟"
     },
     {
       "id": "s6",
-      "say": "bird",
+      "say": "the bird can fly",
       "emoji": "🐦"
     },
     {
       "id": "s7",
-      "say": "flower",
+      "say": "I like flowers",
       "emoji": "🌸"
     },
     {
       "id": "s8",
-      "say": "hello",
+      "say": "hello my friend",
       "emoji": "👋"
     },
     {
       "id": "s9",
-      "say": "goodbye",
+      "say": "see you soon",
       "emoji": "👋"
     },
     {
       "id": "s10",
-      "say": "thank you",
+      "say": "thank you so much",
       "emoji": "🙏"
     },
     {
       "id": "s11",
-      "say": "please",
-      "emoji": "🙂"
-    },
-    {
-      "id": "s12",
-      "say": "good morning",
+      "say": "good morning sunshine",
       "emoji": "🌅"
     },
     {
-      "id": "s13",
-      "say": "good night",
+      "id": "s12",
+      "say": "good night moon",
       "emoji": "🌙"
     },
     {
-      "id": "s14",
+      "id": "s13",
       "say": "I love you",
       "emoji": "❤️"
     },
     {
-      "id": "s15",
-      "say": "big red ball",
+      "id": "s14",
+      "say": "a big red ball",
       "emoji": "🔴"
     },
     {
-      "id": "s16",
-      "say": "little star",
+      "id": "s15",
+      "say": "twinkle little star",
       "emoji": "⭐"
     },
     {
-      "id": "s17",
-      "say": "happy cat",
+      "id": "s16",
+      "say": "the happy cat",
       "emoji": "😺"
     },
     {
-      "id": "s18",
-      "say": "blue sky",
+      "id": "s17",
+      "say": "the sky is blue",
       "emoji": "🌤️"
     },
     {
-      "id": "s19",
-      "say": "yellow sun",
+      "id": "s18",
+      "say": "the sun is hot",
       "emoji": "☀️"
     },
     {
-      "id": "s20",
+      "id": "s19",
       "say": "one two three",
       "emoji": "🔢"
     },
     {
-      "id": "s21",
-      "say": "rainbow",
+      "id": "s20",
+      "say": "I see a rainbow",
       "emoji": "🌈"
     },
     {
-      "id": "s22",
-      "say": "ice cream",
+      "id": "s21",
+      "say": "I like ice cream",
       "emoji": "🍦"
     },
     {
-      "id": "s23",
-      "say": "teddy bear",
+      "id": "s22",
+      "say": "my teddy bear",
       "emoji": "🧸"
     },
     {
-      "id": "s24",
-      "say": "butterfly",
+      "id": "s23",
+      "say": "a pretty butterfly",
       "emoji": "🦋"
     },
     {
-      "id": "s25",
+      "id": "s24",
       "say": "I am happy",
       "emoji": "😊"
+    },
+    {
+      "id": "s25",
+      "say": "let us play",
+      "emoji": "⚽"
     }
   ]
 }

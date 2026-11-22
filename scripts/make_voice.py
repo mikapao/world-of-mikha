@@ -1,4 +1,4 @@
-"""Records every game sentence with the Kokoro text-to-speech model (British voice "Emma").
+"""Records every game sentence with the Kokoro text-to-speech model (British voice "Alice").
 
 Runs in the GitHub build (see .github/workflows). Writes small MP3s + index.json into
 public/voice/, which the game plays instead of the tablet's own voice.
@@ -15,22 +15,23 @@ from kokoro import KPipeline
 
 lines = json.load(open(sys.argv[1], encoding="utf-8"))
 out = sys.argv[2]
-voice = os.environ.get("VOICE", "bf_emma")
+voice = os.environ.get("VOICE", "bf_alice")
+lang = voice[0] if voice[:1] in ("a", "b") else "b"   # a = American, b = British English
 speed = float(os.environ.get("VOICE_SPEED", "0.9"))   # a little slower for a 5-year-old
 os.makedirs(out, exist_ok=True)
 
 # a different voice/speed than last time = record everything again
 stamp = os.path.join(out, "voice.txt")
-setting = f"{voice} {speed}"
+setting = f"kokoro {voice} {speed}"
 if not os.path.exists(stamp) or open(stamp).read().strip() != setting:
     for f in os.listdir(out):
         if f.endswith(".mp3"): os.remove(os.path.join(out, f))
     open(stamp, "w").write(setting)
 
 try:
-    pipe = KPipeline(lang_code="b", repo_id="hexgrad/Kokoro-82M")   # "b" = British English
+    pipe = KPipeline(lang_code=lang, repo_id="hexgrad/Kokoro-82M")
 except TypeError:                                                    # older kokoro versions
-    pipe = KPipeline(lang_code="b")
+    pipe = KPipeline(lang_code=lang)
 pad = np.zeros(int(24000 * 0.12), dtype=np.float32)
 index, made = {}, 0
 for line in lines:

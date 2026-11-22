@@ -14,6 +14,7 @@ import { buildCrystalIsle, updateCrystalIsle } from "./world/crystalIsle.js";
 import { buildWinterIsle, updateWinterIsle } from "./world/winterIsle.js";
 import { buildCandyIsle, updateCandyIsle } from "./world/candyIsle.js";
 import { buildMeadowIsle, updateMeadowIsle } from "./world/meadowIsle.js";
+import { buildAnimals, updateAnimals } from "./world/animals.js";
 import { BR, BR3, BR4, BR5 } from "./world/layout.js";
 import { updateLighting, sunHeight } from "./world/lighting.js";
 import { createMonuments } from "./monuments/index.js";
@@ -28,6 +29,7 @@ import { AVATARS } from "./avatars/index.js";
 import { nameOf } from "./avatars/names.js";
 import { content, loadContent } from "./content.js";
 import { addEntry } from "./storage.js";
+import { initDebug, debugFrame } from "./debug.js";
 
 const nextFrame = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
 const upTo = (p, ms) => Promise.race([p, new Promise(r => setTimeout(r, ms))]);   // never wait forever
@@ -38,6 +40,7 @@ setBlocked(uiOpen);
 
 // ---- build everything step by step, so the loading bar can move ----
 async function boot() {
+  initDebug();                                         // only does something with ?debug in the URL
   await nextFrame();
   splash.progress(8, "Filling the waterfall… 💧");
   const contentP = loadContent();
@@ -55,6 +58,7 @@ async function boot() {
   buildCandyIsle();
   splash.progress(76, "Lighting the fireflies… ✨"); await nextFrame();
   buildMeadowIsle();
+  buildAnimals(monuments);
   buildTitle("World of Mikha");
   buildTrophies(monuments);
   setupParentCorner(monuments, uiOpen, {
@@ -115,6 +119,7 @@ function loop(now) {
   updateWinterIsle(t, dt);
   updateCandyIsle(t);
   updateMeadowIsle(t, dt);
+  updateAnimals(t, dt, camTarget);
 
   camTarget.lerp(player.position, Math.min(1, dt * 3));
   cam.position.copy(camTarget).add(camOffset); cam.lookAt(camTarget);
@@ -133,5 +138,6 @@ function loop(now) {
   enterBtn.classList.toggle("show", !!nearMon);
 
   renderer.render(scene, cam);
+  debugFrame(renderer);
   requestAnimationFrame(loop);
 }

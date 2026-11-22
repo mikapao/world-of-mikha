@@ -3,7 +3,7 @@
 //  2. the fixed joystick pad in the bottom-left corner
 import * as THREE from "three";
 import { renderer, cam } from "./engine.js";
-import { player } from "./player.js";
+import { player, hop } from "./player.js";
 import { audio } from "./sound.js";
 
 const joy = document.getElementById("joy"), knob = document.getElementById("knob"), hint = document.getElementById("hint");
@@ -29,6 +29,15 @@ function playerOnScreen() {
   return { x: (tmp.x + 1) / 2 * innerWidth, y: (1 - tmp.y) / 2 * innerHeight };
 }
 
+// double-tap detector (observes only): two presses < 300 ms and < 40 px apart = one hop
+let lastPress = null;
+function registerPress(e) {
+  const now = performance.now();
+  if (lastPress && now - lastPress.time < 300 && Math.hypot(e.clientX - lastPress.x, e.clientY - lastPress.y) < 40) {
+    lastPress = null; hop();
+  } else lastPress = { time: now, x: e.clientX, y: e.clientY };
+}
+
 const cv = renderer.domElement;
 cv.addEventListener("contextmenu", e => e.preventDefault());
 cv.addEventListener("pointerdown", e => {
@@ -36,6 +45,7 @@ cv.addEventListener("pointerdown", e => {
   audio();                                   // unlock sound on first touch
   const p = playerOnScreen(), reach = Math.max(70, innerHeight * 0.09);
   if (Math.hypot(e.clientX - p.x, e.clientY - p.y) > reach) { pulseHint(); return; }
+  registerPress(e);
   drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, dx: 0, dy: 0 };
   try { cv.setPointerCapture(e.pointerId); } catch (err) {}
   joy.style.left = e.clientX + "px"; joy.style.top = e.clientY + "px"; joy.style.display = "block";
@@ -68,6 +78,7 @@ pad.addEventListener("contextmenu", e => e.preventDefault());
 pad.addEventListener("pointerdown", e => {
   if (blocked()) return;
   e.preventDefault(); audio();
+  registerPress(e);
   padId = e.pointerId; pad.classList.add("active");
   try { pad.setPointerCapture(e.pointerId); } catch (err) {}
   padMove(e);

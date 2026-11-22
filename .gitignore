@@ -6,3 +6,6 @@ ios/
 *.log
 public/voice/
 voice-lines.json
+scripts/__pycache__/
+samples/
+voice-samples.zip

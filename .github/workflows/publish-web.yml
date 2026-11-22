@@ -26,6 +26,8 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     env:
       VITE_CONTENT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/content/
+      VOICE: bf_alice
+      VOICE_SPEED: "0.9"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,10 +45,10 @@ jobs:
             ~/.cache/pip
             ~/.cache/huggingface
             public/voice
-          key: voice-v1-${{ hashFiles('src/voiceLines.js', 'src/voiceKey.js', 'src/avatars/index.js', 'public/content/**', 'scripts/**') }}
-          restore-keys: voice-v1-
+          key: voice-v2-${{ hashFiles('src/voiceLines.js', 'src/voiceKey.js', 'src/avatars/index.js', 'public/content/**', 'scripts/**') }}
+          restore-keys: voice-v2-
 
-      - name: Record the game voice (Kokoro, British "Emma")
+      - name: Record the game voice (Kokoro, British "Alice")
         continue-on-error: true          # if this ever fails, the app still works with the tablet's voice
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq espeak-ng ffmpeg

@@ -3,21 +3,27 @@ import * as THREE from "three";
 import { scene } from "./engine.js";
 import { AVATARS } from "./avatars/index.js";
 import { obstacles, walkable, groundY } from "./world/layout.js";
-import { squeak } from "./sound.js";
+import { squeak, hopSound } from "./sound.js";
 
 export const player = new THREE.Group();
 player.position.set(-1, 0, 2);
 scene.add(player);
 
 let av = AVATARS[0].build(); player.add(av.root);
-let hop = 0, walkT = 0, lastStep = 0, currentId = AVATARS[0].id;
+let hopT = 0, walkT = 0, lastStep = 0, currentId = AVATARS[0].id;
 export const currentAvatarId = () => currentId;
 
 export function setAvatar(id) {
   const a = AVATARS.find(x => x.id === id) || AVATARS[0];
   player.remove(av.root); av = a.build(); player.add(av.root);
   currentId = a.id;
-  hop = 1;
+  hopT = 1;
+}
+
+/** Little hop with a soft sound (double-tap). Ignored while a hop is already running. */
+export function hop() {
+  if (hopT > 0) return;
+  hopT = 1; hopSound();
 }
 
 const SPEED = 4.2;
@@ -52,7 +58,7 @@ export function updatePlayer(dt, t, move) {
   av.armL.rotation.x = moving ? -Math.sin(walkT) * 0.6 : 0;
   av.armR.rotation.x = moving ? Math.sin(walkT) * 0.6 : 0;
   av.idle(t, moving);
-  if (hop > 0) { hop = Math.max(0, hop - dt * 1.6); av.body.position.y += Math.sin((1 - hop) * Math.PI) * 0.9; }
+  if (hopT > 0) { hopT = Math.max(0, hopT - dt * 1.6); av.body.position.y += Math.sin((1 - hopT) * Math.PI) * 0.9; }
 
   // one squeak per footstep, alternating feet
   if (moving) { const step = Math.floor(walkT / Math.PI); if (step !== lastStep) { lastStep = step; squeak(step % 2); } }

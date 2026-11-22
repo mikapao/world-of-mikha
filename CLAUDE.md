@@ -42,19 +42,24 @@ git add . && git commit -m "…" && git push   # triggers the cloud builds
 index.html                 splash, overlays, web-app/iOS meta tags
 src/main.js                splash → step-by-step boot (builds world behind loading bar) → game loop
 src/engine.js              renderer, scene, ortho isometric camera, lights, mat()/mesh() helpers
-src/player.js              avatar walking/bouncing/squeaks, setAvatar(), currentAvatarId(), stepOutOf()
-src/controls.js            steering: hold-and-slide on the avatar OR fixed joystick pad (bottom-left)
+src/player.js              avatar walking/bouncing/squeaks, setAvatar(), currentAvatarId(), stepOutOf(),
+                           hop() (double-tap hop, body only — never leaves the walkable area)
+src/controls.js            steering: hold-and-slide on the avatar OR fixed joystick pad (bottom-left);
+                           double-tap detector (2nd press < 300 ms, < 40 px) → hop(); only observes
 src/avatars/               kitty.js, blibli.js (built in code), glbAvatar.js (loads public/avatars/*.glb),
                            index.js (AVATARS list + default names), names.js (parent-set custom names)
 src/world/                 layout.js (5 islands, 4 bridges, walkable()/groundY(), obstacles),
                            homeIsland, crystalIsle, winterIsle, candyIsle, meadowIsle, bridge, ocean,
                            lighting.js (moods blend by distance: day/dusk/winter/candy/night + brightness),
-                           ring.js (monument circle: red → gold flash + whoosh when standing in it)
+                           ring.js (monument circle: red → gold flash + whoosh when standing in it),
+                           animals.js (12 land animals + 2 dolphins, 3 gulls, 1 turtle; keep-out rules,
+                           culled > 22 units from camera; no sounds)
 src/monuments/             one file per challenge (see below) + index.js
 src/ui/                    splash, title, trophies (bottom-right), picker, shell (challenge window +
                            "Go back to the island?" confirm), parent.js (parent corner), util.js
-src/sound.js               all SFX synthesized in Web Audio: squeak, ping, whoosh. Every button pings.
-src/speech.js              speak(text) → Promise. Plays recorded Emma clips sentence-by-sentence,
+src/sound.js               all SFX synthesized in Web Audio: squeak, ping, whoosh, hopSound. Every button pings.
+src/debug.js               hidden overlay, only with ?debug in the URL: fps, triangles, draw calls, env tris
+src/speech.js              speak(text) → Promise. Plays recorded Alice clips sentence-by-sentence,
                            falls back to device TTS per sentence. stopSpeaking().
 src/voiceKey.js            sentence split + key + clip filename hash (shared with scripts/)
 src/voiceLines.js          FIXED_LINES: every fixed sentence the game speaks
@@ -68,7 +73,8 @@ public/audio/bgm.mp3       background music (owner-supplied, ~3.8 MB)
 public/avatars/ponchi.glb  GLB avatar with Idle + Walk animations (built by scripts/make_ponchi.py)
 public/icons/, manifest.webmanifest   app icon + installable web app (full-screen from Home Screen)
 scripts/voice-lines.mjs    collects every sentence → voice-lines.json
-scripts/make_voice.py      records them with Kokoro (bf_emma) → public/voice/*.mp3 + index.json
+scripts/make_voice.py      records them with Kokoro (bf_alice 0.9) → public/voice/*.mp3 + index.json
+scripts/voice_samples.py   records 6 test sentences in 8 Kokoro voices (workflow voice-samples.yml)
 scripts/make_ponchi.py     generates the Ponchi GLB (pure Python + numpy)
 ```
 
@@ -98,9 +104,15 @@ include `LEAVE_BUTTON`; finish screens call `ctx.shell.leave()`. Use a `run` cou
   won't download the update.
 - Use emoji from Unicode ≤ 11 (older tablets can't show newer ones).
 
-## Voice ("Emma")
-- Kokoro-82M (Apache-2.0), voice `bf_emma`, speed 0.9, recorded in CI (cached; step is
-  `continue-on-error`, so a failure only means the tablet voice is used).
+## Voice ("Alice")
+- Kokoro-82M (Apache-2.0), voice `bf_alice`, speed 0.9 (chosen by the owner 2026-11-22 from samples),
+  set by `VOICE`/`VOICE_SPEED` in both workflows; recorded in CI (cache prefix `voice-v2-`; step is
+  `continue-on-error`, so a failure only means the tablet voice is used). `make_voice.py` picks the
+  British/American `lang_code` from the voice name. Installed APKs prefer their bundled clips, so a voice
+  change reaches the tablet only with a new APK.
+- To compare voices: run the "Voice samples" workflow (Actions → Run workflow, or push a milestone branch)
+  and download the `voice-samples` artifact.
+- Speaking phrases (`speaking.json`) must not contain `. ! ?` mid-phrase — the clip splitter cuts there.
 - **If you add a new `speak("…")` line, add it to `src/voiceLines.js`** so it gets recorded. Lines from
   content files and avatar names are collected automatically by `scripts/voice-lines.mjs`.
 - 🔊 buttons in Snowman/Firefly repeat `lastSaid` (so they hit recorded clips).
@@ -126,10 +138,13 @@ include `LEAVE_BUTTON`; finish screens call `ctx.shell.leave()`. Use a `run` cou
   `glbAvatar("./avatars/name.glb")` in `src/avatars/index.js`.
 
 ## Gotchas
+- Environment detail was raised ~23% in milestone upgrade-1 (flat shading kept; ocean grid unchanged for
+  speed). Crystal Isle is a deliberate hexagon — keep 6 radial segments on its top/base.
+- Tests: `node --test tests/` (Node built-in runner, no deps). Agent-team notes live in `team/`.
 - Verify with `npm run build` before pushing; the owner installs whatever the cloud builds.
 - Workflows install CPU-only torch before kokoro (otherwise pip pulls huge CUDA wheels).
 - Microphone works only over https or in the APK — not via the Wi-Fi dev URL on the tablet.
 - `public/voice/` must never be committed (it's generated and gitignored).
-- Ideas not done yet: gentle session timer ("the island is going to sleep"), APK app icon
-  (currently Capacitor's default; the web app already has the "M" icon), offline service worker
+- APK app icon: CI runs scripts/make_android_icons.py after `cap add android` (from public/icons). Since 2026-11-22.
+- Ideas not done yet: gentle session timer ("the island is going to sleep"), offline service worker
   for the web version.

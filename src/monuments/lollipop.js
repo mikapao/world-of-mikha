@@ -101,7 +101,7 @@ export function createLollipop() {
       if (w && label) label.textContent = w;
       fb.style.color = "#d9879c";
       fb.textContent = w ? `That's ${article(w)}! 💛` : "Try another one 💛";
-      ctx.speak(w ? `That's ${article(w)}! ${prompt}` : `Try another one. ${prompt}`);
+      ctx.speak(w ? `That's ${article(w)}! ${prompt}` : `Try another one, you can do it. ${prompt}`);
     }
   }
 

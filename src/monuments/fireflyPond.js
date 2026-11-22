@@ -103,7 +103,7 @@ export function createFireflyPond() {
       if (!alive(my) || e.disabled) return;
       if (i === target) {
         e.classList.add("gold", "found"); els.forEach(x => x.onclick = null);
-        fb("You found it! ✨"); ctx.ping(1.5); say("You found it!"); res();
+        fb("You found it! ✨"); ctx.ping(1.5); say("You found it, well done!"); res();
       } else {
         wrong++; e.classList.add("dim"); e.disabled = true;
         fb(wrong >= 2 ? "It's this one — look, it's glowing! 💛" : "Not that one — try again 💛", "#d9879c");
@@ -128,7 +128,7 @@ export function createFireflyPond() {
     const btns = [...ctx.shell.card.querySelectorAll(".oddb")];
     await new Promise(res => btns.forEach((b, i) => b.onclick = () => {
       if (!alive(my) || b.disabled) return;
-      if (i === at) { b.classList.add("ok"); btns.forEach(x => x.onclick = null); fb("Yes! That one is different! 🌟"); ctx.ping(1.5); say("Yes! That one is different!"); res(); }
+      if (i === at) { b.classList.add("ok"); btns.forEach(x => x.onclick = null); fb("Yes! That one is different! 🌟"); ctx.ping(1.5); say("Yes, that one is different!"); res(); }
       else { b.classList.add("dim", "shake"); b.disabled = true; fb("Look closely… 💛", "#d9879c"); }
     }));
     await wait(1500);
