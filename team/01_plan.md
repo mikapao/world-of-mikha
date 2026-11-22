@@ -88,3 +88,10 @@ Each task: Coder builds → Tester runs task tests + all 38 baseline tests + `np
 
 ## Gate 1
 - [x] Owner approves this plan (in words), date: 2026-11-22
+
+## Revision 1 — 2026-11-22 (after owner feedback at Gate 2): speed
+Proposed task **T11: performance pass** (waiting for owner approval):
+1. **Merge each animal into one mesh** (one draw call per animal instead of ~8, using vertex colours). The look stays identical.
+2. **Lighter animal shadows:** small animals get a soft round "blob" shadow on the ground instead of a real cast shadow, so they aren't drawn twice.
+3. **Pixel budget:** cap the render sharpness so a frame never draws more than about 2.5 million pixels (the cap only applies on big or very sharp screens). On a normal tablet the difference is hard to see.
+Target: ≥ 30 fps at 2560×1440 in the Claude pane, measured with `?debug`, and better than today on the owner's Edge.

@@ -45,3 +45,9 @@ Merging runs both cloud builds. The first one takes longer because every line is
 
 ## Gate 2
 - [ ] Owner accepts (in words), date: ____ / or sends back with notes.
+
+## Owner feedback, round 1 (2026-11-22): speed problem
+- Owner: in Edge, full screen on a high-res monitor, **fps never goes above 12**. In the Claude browser pane (smaller window) it holds a steady 60.
+- Commander measurement at a 2560×1440 viewport: **36 fps with animals, 56 fps with animals hidden** (one clean sample; later samples were lost because the pane was hidden). Draw calls are 370, up from ~280 before the animals.
+- Cause: the 18 animals are built from **141 separate meshes**, and the land ones cast shadows, so each is drawn twice. That adds ~110+ draw calls per frame. Big screens (and tablets with sharp screens) also draw many pixels per frame, at up to 2× sharpness.
+- Proposed fix: new task T11 (see `01_plan.md` revision). Waiting for owner approval.
