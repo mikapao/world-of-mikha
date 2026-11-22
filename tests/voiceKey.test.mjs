@@ -84,3 +84,17 @@ test("fileOf: pinned literal values for sample keys (baseline)", () => {
 test("fileOf: different phrases give different file names", () => {
   assert.notEqual(fileOf("say i love you"), fileOf("say i am happy"));
 });
+
+// T03 (design D3): every Singing Stone "Say: <phrase>" line must stay ONE sentence (one clip).
+test("splitSentences (T03): each 'Say: <phrase>' from speaking.json stays one sentence", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { fileURLToPath } = await import("node:url");
+  const { join, dirname } = await import("node:path");
+  const here = dirname(fileURLToPath(import.meta.url));
+  const { words } = JSON.parse(readFileSync(join(here, "..", "public", "content", "speaking.json"), "utf8"));
+  assert.equal(words.length, 25);
+  for (const w of words) {
+    const line = `Say: ${w.say}`;
+    assert.deepEqual(splitSentences(line), [line], `${w.id} "${line}"`);
+  }
+});

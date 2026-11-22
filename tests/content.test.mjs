@@ -22,7 +22,7 @@ test("index.json has a numeric version and lists existing files", () => {
   const index = load("index.json");
   assert.equal(typeof index.version, "number");
   assert.equal(Number.isInteger(index.version), true);
-  assert.equal(index.version, 6, "baseline version (bump when any content file changes)");
+  assert.equal(index.version, 7, "version 7 (T03: Singing Stone phrases; bump when any content file changes)");
   for (const [monument, file] of Object.entries(index.monuments)) {
     assert.ok(files.includes(file), `${monument} -> ${file} exists`);
   }
@@ -52,26 +52,60 @@ test("speaking.json: no phrase has leading/trailing spaces or sentence punctuati
   }
 });
 
-// BASELINE, expected to change in upgrade-1: the brief makes every Singing Stone item a 3-4 word phrase.
-// Recorded on 2026-11-22 from the current file. Update this table when the phrases change.
-test("speaking.json: word count per item (baseline, expected to change in upgrade-1)", () => {
-  const expected = {
-    s1: ["apple", 1], s2: ["banana", 1], s3: ["cat", 1], s4: ["dog", 1], s5: ["fish", 1],
-    s6: ["bird", 1], s7: ["flower", 1], s8: ["hello", 1], s9: ["goodbye", 1], s10: ["thank you", 2],
-    s11: ["please", 1], s12: ["good morning", 2], s13: ["good night", 2], s14: ["I love you", 3],
-    s15: ["big red ball", 3], s16: ["little star", 2], s17: ["happy cat", 2], s18: ["blue sky", 2],
-    s19: ["yellow sun", 2], s20: ["one two three", 3], s21: ["rainbow", 1], s22: ["ice cream", 2],
-    s23: ["teddy bear", 2], s24: ["butterfly", 1], s25: ["I am happy", 3],
-  };
+// T03 (design D3): Singing Stone items are 3-4 word phrases. Rules, not a snapshot table.
+const wordsOf = say => say.trim().split(/\s+/);
+
+test("speaking.json (T03): ids are exactly s1..s25 in order", () => {
+  const { words } = load("speaking.json");
+  assert.deepEqual(words.map(w => w.id), Array.from({ length: 25 }, (_, i) => `s${i + 1}`));
+});
+
+test("speaking.json (T03): every say has 3 or 4 words", () => {
   const { words } = load("speaking.json");
   for (const w of words) {
-    const [say, count] = expected[w.id];
-    assert.equal(w.say, say, `${w.id} phrase`);
-    assert.equal(w.say.split(/\s+/).length, count, `${w.id} word count`);
+    const n = wordsOf(w.say).length;
+    assert.ok(n === 3 || n === 4, `${w.id} "${w.say}" has ${n} words`);
   }
-  const tally = { 1: 0, 2: 0, 3: 0, 4: 0 };
-  for (const w of words) tally[w.say.split(/\s+/).length]++;
-  assert.deepEqual(tally, { 1: 12, 2: 9, 3: 4, 4: 0 }, "baseline tally: 12 one-word, 9 two-word, 4 three-word, 0 four-word");
+});
+
+test("speaking.json (T03): at least 10 of the 25 phrases have 4 words", () => {
+  const { words } = load("speaking.json");
+  const fours = words.filter(w => wordsOf(w.say).length === 4).length;
+  assert.ok(fours >= 10, `${fours} four-word phrases`);
+});
+
+test("speaking.json (T03): no . ! ? , in any say", () => {
+  const { words } = load("speaking.json");
+  for (const w of words) assert.doesNotMatch(w.say, /[.!?,]/, `${w.id} "${w.say}"`);
+});
+
+test("speaking.json (T03): lower-case everywhere except the word 'I'", () => {
+  const { words } = load("speaking.json");
+  for (const w of words) {
+    for (const word of wordsOf(w.say)) {
+      if (word === "I") continue;
+      assert.equal(word, word.toLowerCase(), `${w.id} "${w.say}": "${word}" must be lower-case`);
+    }
+  }
+});
+
+test("speaking.json (T03): exactly one emoji per item, Unicode 11 or older", () => {
+  const { words } = load("speaking.json");
+  for (const w of words) {
+    // Drop variation selector U+FE0F (used by e.g. heart and sun); what is left must be ONE code point.
+    const cps = Array.from(w.emoji.replace(/️/g, ""));
+    assert.equal(cps.length, 1, `${w.id} emoji "${w.emoji}" must be one emoji`);
+    const cp = cps[0].codePointAt(0);
+    assert.ok(cp <= 0x1faff, `${w.id} U+${cp.toString(16).toUpperCase()} is above the emoji block limit`);
+    assert.ok(!(cp >= 0x1f971 && cp <= 0x1f97f), `${w.id} U+${cp.toString(16).toUpperCase()} is a Unicode 12+ face`);
+    assert.ok(cp < 0x1fa70, `${w.id} U+${cp.toString(16).toUpperCase()} is Unicode 12+ (symbols/pictographs extended-A)`);
+  }
+});
+
+test("speaking.json (T03): wordsPerVisit is 10 and the pool has 25 items", () => {
+  const data = load("speaking.json");
+  assert.equal(data.wordsPerVisit, 10);
+  assert.equal(data.words.length, 25);
 });
 
 test("math.json, memory.json, vocab.json, focus.json: parse and have their pool keys", () => {
