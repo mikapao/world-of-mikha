@@ -70,6 +70,11 @@ jobs:
           npx cap add android
           npx cap sync android
 
+      - name: Make the app icon
+        run: |
+          pip install -q pillow
+          python scripts/make_android_icons.py android/app/src/main/res
+
       - name: Android settings (text-to-speech, mic for later, keep same signature)
         run: |
           M=android/app/src/main/AndroidManifest.xml

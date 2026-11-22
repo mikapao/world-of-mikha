@@ -151,18 +151,31 @@ test("workflow file is ASCII-clean YAML (no tabs)", () => {
 // ---- protected files: only the agreed T10 (design D7) voice changes may differ from HEAD ----
 // Updated by the T10 tester: the old check ("no diff at all") pinned the T04 state. Now every
 // changed line must be one of the D7 voice settings.
-test("make_voice.py and the two existing workflows differ from HEAD only in the D7 voice settings", () => {
-  const out = execFileSync("git", [
-    "-C", root, "diff", "-U0", "HEAD", "--",
+// Updated by the T12 tester (design D9): build-apk.yml may also gain exactly one new step,
+// "Make the app icon". Its four lines are excused only when the whole step is present once.
+const ICON_STEP = [
+  "+      - name: Make the app icon",
+  "+        run: |",
+  "+          pip install -q pillow",
+  "+          python scripts/make_android_icons.py android/app/src/main/res",
+];
+test("make_voice.py and the two existing workflows differ from HEAD only in the D7 voice settings (and the D9 icon step in build-apk.yml)", () => {
+  const files = [
     "scripts/make_voice.py", ".github/workflows/build-apk.yml", ".github/workflows/publish-web.yml",
-  ], { encoding: "utf8" });
-  const changed = out.split("\n").filter(l => /^[+-][^+-]/.test(l));
+  ];
   const allowed = [
     /VOICE: bf_alice$/, /VOICE_SPEED: "0\.9"$/,
     /voice-v[12]-/, /"Emma"|"Alice"/,
     /bf_emma|bf_alice/, /Records every game sentence|British voice/,
     /lang = voice\[0\]|lang_code=lang|lang_code="b"/, /setting = |kokoro/,
   ];
-  const stray = changed.filter(l => !allowed.some(re => re.test(l)));
-  assert.deepEqual(stray, [], "changed lines outside the D7 voice settings");
+  const stray = [];
+  for (const f of files) {
+    const changed = execFileSync("git", ["-C", root, "diff", "-U0", "HEAD", "--", f], { encoding: "utf8" })
+      .split("\n").filter(l => /^[+-][^+-]/.test(l));
+    const stepPresent = ICON_STEP.every(l => changed.filter(x => x === l).length === 1);
+    const excused = f.endsWith("build-apk.yml") && stepPresent ? ICON_STEP : [];
+    stray.push(...changed.filter(l => !excused.includes(l) && !allowed.some(re => re.test(l))));
+  }
+  assert.deepEqual(stray, [], "changed lines outside the D7 voice settings and the D9 icon step");
 });

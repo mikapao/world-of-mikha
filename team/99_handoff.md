@@ -33,6 +33,7 @@ Merging runs both cloud builds. The first one takes longer because every line is
 - [ ] **Singing Stone (A):** phrases show nicely next to the picture.
 - [ ] **Singing Stone mic (B):** Mikha can say a 4-word phrase before listening stops (5 s). If it cuts her off, tell me and we'll raise it to 7 s.
 - [ ] **Voice (B):** everything is spoken by Alice, cheerful but calm. No robot-voice sentences.
+- [ ] **App icon (B):** the tablet shows the "M" icon. If the launcher wiggles icons, no thin navy edge appears.
 - [ ] **Everything else (B):** the other 4 monuments, trophies, parent corner, scores, the back button and music muting work as before.
 
 ## Known and accepted
