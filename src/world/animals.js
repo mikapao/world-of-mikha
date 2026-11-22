@@ -177,6 +177,7 @@ export function buildAnimals(monuments) {
     if (r.scale) a.g.scale.setScalar(r.scale);
     scene.add(a.g); land.push(a);
   }
+  buildMarine();
 }
 
 function updateLand(t, dt, cam) {
@@ -215,8 +216,166 @@ function updateLand(t, dt, cam) {
   }
 }
 
-// ---------------------------------------------------------------- marine and flying (T09) — added here later
+// ---------------------------------------------------------------- marine and flying (T09)
+const SEA = -0.9;
+const ALL_ISL = [{ x: 0, z: 0, r: ISLAND_R }, I2, I3, I4, I5];
+/** distance from (x,z) to the nearest island edge (negative = on an island) */
+const edgeDist = (x, z) => Math.min(...ALL_ISL.map(i => Math.hypot(x - i.x, z - i.z) - i.r));
+/** open water: ≥ margin from every island edge and no bridge deck within ~1.8 units */
+function openWater(x, z, margin) {
+  if (edgeDist(x, z) < margin) return false;
+  for (const [dx, dz] of [[0, 0], [1.8, 0], [-1.8, 0], [0, 1.8], [0, -1.8]]) if (walkable(x + dx, z + dz)) return false;
+  return true;
+}
+
+function dolphin() {
+  const g = new THREE.Group();
+  const S = 0x7f9fc2, B = 0xe9f0f6;
+  part(g, sph(7, 5), S, 0, 0, 0, 0.26, 0.26, 0.8, { shadow: false });                 // body
+  part(g, sph(6, 4), B, 0, -0.07, 0.1, 0.22, 0.16, 0.6, { shadow: false });           // pale belly
+  part(g, sph(5, 3), S, 0, 0.0, 0.88, 0.14, 0.13, 0.28, { shadow: false });           // snout
+  part(g, cone(4), S, 0, 0.33, -0.05, 0.1, 0.3, 0.2, { rx: -0.4, shadow: false });    // dorsal fin
+  part(g, sph(5, 3), S, -0.28, -0.12, 0.3, 0.2, 0.04, 0.12, { rz: 0.5, shadow: false }); // flippers
+  part(g, sph(5, 3), S, 0.28, -0.12, 0.3, 0.2, 0.04, 0.12, { rz: -0.5, shadow: false });
+  part(g, sph(5, 3), S, 0, 0.02, -0.85, 0.12, 0.12, 0.3, { shadow: false });          // tail stock
+  part(g, sph(5, 3), S, -0.17, 0.02, -1.15, 0.2, 0.03, 0.1, { shadow: false });       // flukes
+  part(g, sph(5, 3), S, 0.17, 0.02, -1.15, 0.2, 0.03, 0.1, { shadow: false });
+  g.rotation.order = "YXZ";
+  return g;
+}
+function seagull() {
+  const g = new THREE.Group();
+  part(g, sph(6, 4), 0xffffff, 0, 0, 0, 0.14, 0.12, 0.34, { shadow: false });         // body
+  part(g, sph(5, 3), 0xffffff, 0, 0.06, 0.32, 0.1, 0.1, 0.1, { shadow: false });      // head
+  part(g, cone(4), 0xffb347, 0, 0.05, 0.46, 0.03, 0.09, 0.03, { rx: Math.PI / 2, shadow: false }); // beak
+  part(g, cone(4), 0xe8edf2, 0, 0.01, -0.4, 0.08, 0.2, 0.02, { rx: -Math.PI / 2, shadow: false }); // tail
+  const wings = [];
+  for (const s of [-1, 1]) {
+    const w = new THREE.Group(); w.position.set(s * 0.1, 0.04, 0.02);
+    part(w, sph(5, 3), 0xdfe6ee, s * 0.33, 0, 0, 0.36, 0.025, 0.14, { shadow: false });
+    g.add(w); wings.push(w);
+  }
+  g.userData.wings = wings;
+  g.rotation.order = "YXZ";
+  return g;
+}
+function turtle() {
+  const g = new THREE.Group();
+  part(g, sph(7, 5), 0x5f9a62, 0, 0, 0, 0.5, 0.2, 0.62, { shadow: false });            // shell
+  part(g, sph(5, 3), 0x8bc48a, 0, -0.04, 0, 0.4, 0.12, 0.52, { shadow: false });       // lighter underside
+  part(g, sph(5, 3), 0x9ccf94, 0, 0.0, 0.68, 0.13, 0.11, 0.15, { shadow: false });     // head
+  part(g, cone(4), 0x9ccf94, 0, 0.0, -0.7, 0.07, 0.2, 0.07, { rx: -Math.PI / 2, shadow: false }); // tail
+  const fl = [];
+  for (const [x, z, s] of [[-0.45, 0.35, 1], [0.45, 0.35, 1], [-0.4, -0.35, 0.7], [0.4, -0.35, 0.7]]) {
+    const p = new THREE.Group(); p.position.set(x, -0.04, z);
+    part(p, sph(5, 3), 0x8bc48a, Math.sign(x) * 0.16 * s, 0, 0, 0.2 * s, 0.035, 0.1 * s, { shadow: false });
+    g.add(p); fl.push(p);
+  }
+  g.userData.flippers = fl;
+  g.rotation.order = "YXZ";
+  return g;
+}
+
+const dolphins = [], gulls = [];
+let turtleA = null, leapSpots = [];
+const LEAP_L = 4.4, LEAP_H = 2.1, LEAP_T = 2.8, LEAP_Y0 = -1.5;
+
+/** a leap arc is allowed when every point on it (and its sides) is open water ≥ 3 from an island edge, and it is seen from an island */
+function leapOk(x, z, ang) {
+  const dx = Math.sin(ang), dz = Math.cos(ang);
+  for (let k = 0; k <= 8; k++) {
+    const d = (k / 8 - 0.5) * LEAP_L;
+    const px = x + dx * d, pz = z + dz * d;
+    if (!openWater(px, pz, 3.2) || edgeDist(px, pz) > 8) return false;   // whole arc 3.2 to 8 from an island edge
+  }
+  return true;
+}
+function buildMarine() {
+  leapSpots = [];
+  for (let n = 0; n < 4000 && leapSpots.length < 24; n++) {
+    const x = rnd(-45, 45), z = rnd(-50, 45), ang = Math.random() * 6.28;
+    if (leapOk(x, z, ang)) leapSpots.push({ x, z, ang });
+  }
+  if (leapSpots.length) for (let i = 0; i < 2; i++) {
+    const g = dolphin(); g.visible = false; g.position.y = LEAP_Y0; scene.add(g);
+    dolphins.push({ g, wait: rnd(2, 6) + i * 5, u: -1, spot: null });
+  }
+  // gulls: circles between islands
+  const centres = [{ x: -9, z: 9 }, { x: 12, z: 19 }, { x: 11, z: -12 }];
+  centres.forEach((c, i) => {
+    const g = seagull(); scene.add(g);
+    gulls.push({ g, c, r: 4.2 + i * 1.3, y: 4.4 + i * 0.5, th: Math.random() * 6.28, w: (0.28 + i * 0.05) * (i % 2 ? -1 : 1), ph: i * 2, x: c.x, z: c.z });
+    const b = gulls[gulls.length - 1];
+    b.x = c.x + Math.cos(b.th) * b.r; b.z = c.z + Math.sin(b.th) * b.r;      // start on the circle, heading along it
+    const sg = Math.sign(b.w);
+    g.position.set(b.x, b.y, b.z); g.rotation.y = Math.atan2(-Math.sin(b.th) * sg, Math.cos(b.th) * sg);
+  });
+  // turtle: slow ellipse in open water, checked all the way round
+  for (let n = 0; n < 600 && !turtleA; n++) {
+    const c = { x: rnd(-40, 40), z: rnd(-45, 40) }, ra = 3, rb = 1.8, rot = Math.random() * 3.14;
+    if (edgeDist(c.x, c.z) < 5.5 || edgeDist(c.x, c.z) > 12) continue;
+    let ok = true;
+    for (let k = 0; k < 24 && ok; k++) {
+      const a = k / 24 * 6.283, ex = Math.cos(a) * ra, ez = Math.sin(a) * rb;
+      ok = openWater(c.x + ex * Math.cos(rot) - ez * Math.sin(rot), c.z + ex * Math.sin(rot) + ez * Math.cos(rot), 2.5);
+    }
+    if (ok) {
+      const g = turtle(); scene.add(g);
+      const th = Math.random() * 6.28, cr = Math.cos(rot), sr = Math.sin(rot);
+      const ex = Math.cos(th) * ra, ez = Math.sin(th) * rb, vx = -Math.sin(th) * ra, vz = Math.cos(th) * rb;
+      const x = c.x + ex * cr - ez * sr, z = c.z + ex * sr + ez * cr;
+      g.position.set(x, SEA + 0.05, z);
+      g.rotation.y = Math.atan2(vx * cr - vz * sr, vx * sr + vz * cr);
+      turtleA = { g, c, ra, rb, rot, th, x, z };
+    }
+  }
+}
+
+function updateMarine(t, dt, cam) {
+  for (const d of dolphins) {
+    if (d.u < 0) {                                                       // under water, waiting
+      d.wait -= dt;
+      if (d.wait <= 0) {
+        const near = leapSpots.filter(p => Math.hypot(p.x - cam.x, p.z - cam.z) <= CULL);
+        if (!near.length) { d.wait = 1; continue; }                      // nobody to see it: stay hidden
+        d.spot = near[Math.floor(Math.random() * near.length)]; d.u = 0; d.g.visible = true;
+      }
+      if (d.u < 0) continue;
+    }
+    d.u += dt / LEAP_T;
+    const s = d.spot;
+    if (d.u >= 1) { d.u = -1; d.wait = rnd(8, 15); d.g.visible = false; d.g.position.set(s.x, LEAP_Y0, s.z); continue; }
+    const off = (d.u - 0.5) * LEAP_L, sn = Math.sin(Math.PI * d.u);
+    d.g.position.set(s.x + Math.sin(s.ang) * off, LEAP_Y0 + LEAP_H * sn, s.z + Math.cos(s.ang) * off);
+    d.g.rotation.y = s.ang;
+    d.g.rotation.x = -Math.atan(LEAP_H * Math.PI * Math.cos(Math.PI * d.u) / LEAP_L);
+  }
+  for (const b of gulls) {
+    if (Math.hypot(b.x - cam.x, b.z - cam.z) > CULL + 8) continue;       // far away: freeze (they fly high, so see a bit further)
+    b.th += b.w * dt;
+    b.x = b.c.x + Math.cos(b.th) * b.r; b.z = b.c.z + Math.sin(b.th) * b.r;
+    const sgn = Math.sign(b.w);
+    b.g.position.set(b.x, b.y + Math.sin(t * 0.6 + b.ph) * 0.3, b.z);
+    b.g.rotation.y = Math.atan2(-Math.sin(b.th) * sgn, Math.cos(b.th) * sgn);
+    b.g.rotation.z = -0.25 * sgn;                                        // gentle bank into the turn
+    const f = Math.sin(t * 3.2 + b.ph) * 0.45;
+    b.g.userData.wings[0].rotation.z = -f; b.g.userData.wings[1].rotation.z = f;
+  }
+  const tu = turtleA;
+  if (tu && Math.hypot(tu.x - cam.x, tu.z - cam.z) <= CULL) {
+    tu.th += 0.22 * dt;
+    const ex = Math.cos(tu.th) * tu.ra, ez = Math.sin(tu.th) * tu.rb, cr = Math.cos(tu.rot), sr = Math.sin(tu.rot);
+    tu.x = tu.c.x + ex * cr - ez * sr; tu.z = tu.c.z + ex * sr + ez * cr;
+    const vx = -Math.sin(tu.th) * tu.ra, vz = Math.cos(tu.th) * tu.rb;
+    tu.g.position.set(tu.x, SEA + 0.05 + Math.sin(t * 1.1) * 0.03, tu.z);
+    tu.g.rotation.y = Math.atan2(vx * cr - vz * sr, vx * sr + vz * cr);
+    const f = Math.sin(t * 1.6) * 0.35;
+    const fl = tu.g.userData.flippers;
+    fl[0].rotation.z = f; fl[1].rotation.z = -f; fl[2].rotation.z = -f * 0.6; fl[3].rotation.z = f * 0.6;
+  }
+}
 
 export function updateAnimals(t, dt, camTarget) {
   updateLand(t, dt, camTarget);
+  updateMarine(t, dt, camTarget);
 }
