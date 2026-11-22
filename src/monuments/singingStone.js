@@ -81,8 +81,8 @@ export function createSingingStone() {
     if (!best || r.peak > best.peak) best = r;
     let say;
     if (r.peak >= BRAVE) { fb.style.color = "#6bb57c"; fb.textContent = "What a brave voice! 🌟"; face.textContent = "😄"; say = "What a brave voice!"; ctx.ping(1.5); }
-    else if (r.heard && r.peak >= 22) { fb.style.color = "#c99a3c"; fb.textContent = "Nice! Can you say it a little louder? 🙂"; face.textContent = "🙂"; say = "Nice! Can you say it a little louder?"; }
-    else { fb.style.color = "#d9879c"; fb.textContent = "I couldn't hear you — let's try again! 👂"; face.textContent = "🤔"; say = "I couldn't hear you. Let's try again!"; }
+    else if (r.heard && r.peak >= 22) { fb.style.color = "#c99a3c"; fb.textContent = "Nice! Can you say it a little louder? 🙂"; face.textContent = "🙂"; say = "Lovely! Can you say it a little louder?"; }
+    else { fb.style.color = "#d9879c"; fb.textContent = "I couldn't hear you — let's try again! 👂"; face.textContent = "🤔"; say = "I couldn't hear you. Let's try again together."; }
     stoneUI(r.peak);
     btns.style.visibility = "visible";
     ctx.speak(say);

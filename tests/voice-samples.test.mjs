@@ -148,11 +148,21 @@ test("workflow file is ASCII-clean YAML (no tabs)", () => {
   assert.ok(!wfText.includes("\t"));
 });
 
-// ---- unchanged files ----
-test("make_voice.py and the two existing workflows are unchanged versus HEAD", () => {
+// ---- protected files: only the agreed T10 (design D7) voice changes may differ from HEAD ----
+// Updated by the T10 tester: the old check ("no diff at all") pinned the T04 state. Now every
+// changed line must be one of the D7 voice settings.
+test("make_voice.py and the two existing workflows differ from HEAD only in the D7 voice settings", () => {
   const out = execFileSync("git", [
-    "-C", root, "diff", "--name-only", "HEAD", "--",
+    "-C", root, "diff", "-U0", "HEAD", "--",
     "scripts/make_voice.py", ".github/workflows/build-apk.yml", ".github/workflows/publish-web.yml",
   ], { encoding: "utf8" });
-  assert.equal(out.trim(), "", "no changes to the protected files");
+  const changed = out.split("\n").filter(l => /^[+-][^+-]/.test(l));
+  const allowed = [
+    /VOICE: bf_alice$/, /VOICE_SPEED: "0\.9"$/,
+    /voice-v[12]-/, /"Emma"|"Alice"/,
+    /bf_emma|bf_alice/, /Records every game sentence|British voice/,
+    /lang = voice\[0\]|lang_code=lang|lang_code="b"/, /setting = |kokoro/,
+  ];
+  const stray = changed.filter(l => !allowed.some(re => re.test(l)));
+  assert.deepEqual(stray, [], "changed lines outside the D7 voice settings");
 });

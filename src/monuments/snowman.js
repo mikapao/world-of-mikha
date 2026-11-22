@@ -97,7 +97,7 @@ export function createSnowman() {
 
     // 2. snow covers everything
     render(q, items.map(() => `<div class="mcard snow">❄️</div>`).join(""), "Whoosh! Snow is falling… ❄️");
-    say("Whoosh! Snow is falling!");
+    say("Whoosh! Soft snow is falling.");
     await wait(1800);
     if (!alive(myRun)) return;
 
@@ -121,7 +121,7 @@ export function createSnowman() {
       card.querySelectorAll(".mchoice").forEach(b => { if (b !== btn) b.classList.add("dim"); });
       const empty = card.querySelector(".mcard.empty");
       if (empty) { empty.textContent = missing; empty.classList.remove("empty"); empty.classList.add("found"); }
-      const cheer = [["You remembered! 🌟", "You remembered!"], ["Super memory! ⛄", "Super memory!"], ["Brilliant! ❄️", "Brilliant!"]][qi % 3];
+      const cheer = [["You remembered! 🌟", "You remembered!"], ["Super memory! ⛄", "Super memory!"], ["Brilliant! ❄️", "Brilliant, well done!"]][qi % 3];
       fb.style.color = "#6bb57c"; fb.textContent = cheer[0];
       setTimeout(() => ctx.ping(1.5), 140); say(cheer[1]);
       entry.questions.push({ id: q.id, attempts: tries });

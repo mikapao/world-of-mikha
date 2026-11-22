@@ -45,7 +45,7 @@ export function createCountingWaterfall() {
     q.type === "add" ? `<div class="group">${repeat(q.emoji, q.a)}</div><span class="op">+</span><div class="group">${repeat(q.emoji, q.b)}</div>` :
     q.type === "sub" ? `<div class="group">${repeat(q.emoji, q.a - q.b)}${repeat(q.emoji, q.b, "gone")}</div>` : "";
   const gentle = ["Try again 💛", "Almost! Count once more 🌼", "Let's look again 🐢"];
-  const cheers = [["Yes! 🌸", "Yes!"], ["Wonderful! 🌈", "Wonderful!"], ["You got it! ⭐", "You got it!"]];
+  const cheers = [["Yes! 🌸", "Yes, well done!"], ["Wonderful! 🌈", "Wonderful!"], ["You got it! ⭐", "You got it, clever you!"]];
 
   function show() {
     const q = qList[qi]; tries = 0;
