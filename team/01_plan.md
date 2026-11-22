@@ -95,3 +95,6 @@ Task **T11: performance pass**, **approved by the owner 2026-11-22**. Design D8 
 2. **Lighter animal shadows:** small animals get a soft round "blob" shadow on the ground instead of a real cast shadow, so they aren't drawn twice.
 3. **Pixel budget:** cap the render sharpness so a frame never draws more than about 2.5 million pixels (the cap only applies on big or very sharp screens). On a normal tablet the difference is hard to see.
 Target: ≥ 30 fps at 2560×1440 in the Claude pane, measured with `?debug`, and better than today on the owner's Edge.
+
+## Revision 2: 2026-11-22, APK app icon (T12)
+The owner asked whether the APK has the "M" icon from the web app. It doesn't: CI runs `npx cap add android` fresh, so every APK has had Capacitor's default icon. **Approved by the owner 2026-11-22** ("Yes, add T12 now"). T12 goes in this milestone before merging. Design D9.

@@ -70,3 +70,13 @@ Follows `01_plan.md` (approved 2026-11-22). Contracts below are binding for the 
 - **Pixel budget** in `engine.js` `resize()`: pixel ratio = `min(devicePixelRatio, 2, sqrt(2_500_000 / (innerWidth * innerHeight)))`, never below 0.5 (was 0.75; see note above). Recompute on every resize. **Floor changed to 0.5 (2026-11-22, Commander)**: 0.75 contradicted the 2.5 M budget at 4K.
 - Must stay the same: colours, sizes, silhouettes, every animation and keep-out behaviour, triangles per animal (±5%), and the T08/T09 tests.
 - Target: draw calls with all animals ≤ ~300 (was 370). ≥ 30 fps at a 2560×1440 viewport in the Claude pane with `?debug`.
+
+## D9. APK app icon (T12), added 2026-11-22
+- New `scripts/make_android_icons.py` (Pillow). Usage: `python scripts/make_android_icons.py <android/app/src/main/res>`. Sources: `public/icons/icon-512.png` (legacy) and `public/icons/icon-maskable-512.png` (adaptive). Background colour = the icon's corner pixel (≈ #27345E).
+- Writes, overwriting Capacitor's defaults:
+  - legacy `mipmap-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher.png` at 48/72/96/144/192 px, plus `ic_launcher_round.png` (the same image masked to a circle, transparent outside);
+  - adaptive foreground `mipmap-*/ic_launcher_foreground.png` at 108/162/216/324/432 px. Canvas filled with the background colour, with the maskable icon scaled so its 80% safe zone fits Android's 66/108 safe zone (icon side ≈ 0.764 × canvas, centred);
+  - `values/ic_launcher_background.xml`: `<color name="ic_launcher_background">#27345E</color>` (actual value from the pixel);
+  - keep `mipmap-anydpi-v26/ic_launcher*.xml` as Capacitor generates them (they already point at these names). If they're missing, write them.
+- Workflow `build-apk.yml`: after "Create the Android project", add the step `pip install -q pillow && python scripts/make_android_icons.py android/app/src/main/res`, before the Gradle build. Python is already set up earlier in the job. Not `continue-on-error`: a broken icon should fail loudly.
+- Doesn't touch the app id, signing, or `capacitor.config.json`.
