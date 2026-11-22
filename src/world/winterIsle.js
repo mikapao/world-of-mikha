@@ -18,8 +18,8 @@ let snow = null, snowBase = null;
 const SNOW_N = 420, SNOW_H = 9;
 
 export function buildWinterIsle() {
-  const top = mesh(new THREE.CylinderGeometry(I3.r, I3.r - 0.4, 0.8, 12), mat(0xe6edf4), 0, -0.4, 0); top.castShadow = false; isle3.add(top);
-  isle3.add(mesh(new THREE.CylinderGeometry(I3.r - 0.4, I3.r - 2.8, 3, 12), mat(0xa9c8e0), 0, -2.3, 0, false));
+  const top = mesh(new THREE.CylinderGeometry(I3.r, I3.r - 0.4, 0.8, 16), mat(0xe6edf4), 0, -0.4, 0); top.castShadow = false; isle3.add(top);
+  isle3.add(mesh(new THREE.CylinderGeometry(I3.r - 0.4, I3.r - 2.8, 3, 16), mat(0xa9c8e0), 0, -2.3, 0, false));
   // icy blue rim chunks
   for (let i = 0; i < 14; i++) {
     const a = i / 14 * 6.28 + 0.2, x = Math.cos(a) * (I3.r - 0.15), z = Math.sin(a) * (I3.r - 0.15);
@@ -29,7 +29,7 @@ export function buildWinterIsle() {
   // soft snow drifts
   for (let i = 0; i < 12; i++) {
     const a = rnd(0, 6.28), r = rnd(1.5, I3_WALK);
-    const d = mesh(new THREE.SphereGeometry(rnd(0.4, 0.8), 8, 5), mat(0xeef3f8), Math.cos(a) * r, -0.1, Math.sin(a) * r, false);
+    const d = mesh(new THREE.SphereGeometry(rnd(0.4, 0.8), 10, 6), mat(0xeef3f8), Math.cos(a) * r, -0.1, Math.sin(a) * r, false);
     d.scale.y = 0.35; d.receiveShadow = true; isle3.add(d);
   }
   // frozen pond (walkable, just pretty)
@@ -38,7 +38,7 @@ export function buildWinterIsle() {
   reservedWinter.push({ x: 3.2, z: 2.6 });
   // igloo
   const igloo = new THREE.Group(); igloo.position.set(-3.6, 0, 3.4); igloo.rotation.y = 0.6; isle3.add(igloo);
-  const dome = mesh(new THREE.SphereGeometry(1.2, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), mat(0xf7fbff), 0, 0, 0); igloo.add(dome);
+  const dome = mesh(new THREE.SphereGeometry(1.2, 14, 7, 0, Math.PI * 2, 0, Math.PI / 2), mat(0xf7fbff), 0, 0, 0); igloo.add(dome);
   igloo.add(mesh(new THREE.BoxGeometry(0.85, 0.7, 0.6), mat(0xeaf3fb), 0, 0.35, 1.05));                  // tunnel
   igloo.add(mesh(new THREE.CircleGeometry(0.3, 10), mat(0x7f9bb5), 0, 0.32, 1.36, false));               // doorway
   obstacles.push({ x: I3.x - 3.6, z: I3.z + 3.4, r: 1.3 });
@@ -50,10 +50,10 @@ export function buildWinterIsle() {
     do { const a = rnd(0, 6.28), r = rnd(2.2, I3_WALK - 0.4); x = Math.cos(a) * r; z = Math.sin(a) * r; t++; }
     while (t < 50 && !(farFrom(x, z, reservedWinter, 2.4) && farFrom(x, z, pines.map(p => p.position), 1.7)));
     const s = rnd(0.75, 1.2), g = new THREE.Group(); g.position.set(x, 0, z);
-    g.add(mesh(new THREE.CylinderGeometry(0.1 * s, 0.14 * s, 0.5 * s, 5), mat(0x8a6a4f), 0, 0.25 * s, 0));
+    g.add(mesh(new THREE.CylinderGeometry(0.1 * s, 0.14 * s, 0.5 * s, 8), mat(0x8a6a4f), 0, 0.25 * s, 0));
     [[0.85, 0.75], [0.65, 1.25], [0.42, 1.7]].forEach(([rr, y], k) => {
-      g.add(mesh(new THREE.ConeGeometry(rr * s, 0.75 * s, 7), mat(greens[(i + k) % 3]), 0, y * s, 0));
-      g.add(mesh(new THREE.ConeGeometry(rr * s * 0.62, 0.32 * s, 7), mat(0xffffff), 0, (y + 0.24) * s, 0, false));
+      g.add(mesh(new THREE.ConeGeometry(rr * s, 0.75 * s, 8), mat(greens[(i + k) % 3]), 0, y * s, 0));
+      g.add(mesh(new THREE.ConeGeometry(rr * s * 0.62, 0.32 * s, 8), mat(0xffffff), 0, (y + 0.24) * s, 0, false));
     });
     g.userData.ph = rnd(0, 6); isle3.add(g); pines.push(g);
     obstacles.push({ x: I3.x + x, z: I3.z + z, r: 0.5 * s });

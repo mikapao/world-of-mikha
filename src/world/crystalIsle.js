@@ -23,7 +23,7 @@ export function buildCrystalIsle() {
   for (let i = 0; i < 9; i++) {    // rocky rim spires (bridge entry kept open)
     const a = i / 9 * 6.28 + 0.3, r = I2.r - 0.7, x = Math.cos(a) * r, z = Math.sin(a) * r;
     if (Math.hypot(x + BR.ux * I2.r, z + BR.uz * I2.r) < 3) continue;
-    const h = rnd(1, 2.4), rk = mesh(new THREE.CylinderGeometry(rnd(0.35, 0.6), rnd(0.7, 1), h, 5), mat(0x8a68b0), x, h / 2 - 0.1, z);
+    const h = rnd(1, 2.4), rk = mesh(new THREE.CylinderGeometry(rnd(0.35, 0.6), rnd(0.7, 1), h, 8), mat(0x8a68b0), x, h / 2 - 0.1, z);
     rk.rotation.y = rnd(0, 3); isle2.add(rk);
   }
   for (let i = 0; i < 11; i++) {   // glowing crystal clusters

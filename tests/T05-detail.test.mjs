@@ -9,11 +9,13 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// Baseline commit for source checks: the state before T05 was committed. Update when a new task is committed.
+const BASE = "0c7c887";
 const FILES = ["src/world/homeIsland.js", "src/world/bridge.js"];
 
 const headText = f => {
   try {
-    return execFileSync("git", ["show", `HEAD:${f}`], { cwd: ROOT, encoding: "utf8" }).replace(/\r\n/g, "\n");
+    return execFileSync("git", ["show", `${BASE}:${f}`], { cwd: ROOT, encoding: "utf8" }).replace(/\r\n/g, "\n");
   } catch (e) { return null; }
 };
 const workText = f => readFileSync(path.join(ROOT, f), "utf8").replace(/\r\n/g, "\n");
