@@ -1,0 +1,47 @@
+# Records test sentences with several voices so the owner can listen and pick one.
+# Download "voice-samples" from the run's Artifacts section.
+name: Voice samples
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["milestone/**"]
+    paths:
+      - scripts/voice_samples.py
+      - .github/workflows/voice-samples.yml
+
+permissions:
+  contents: read
+
+jobs:
+  samples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Remember model downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/huggingface
+          key: voice-samples-v1
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq espeak-ng ffmpeg
+          pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -q "kokoro>=0.9" soundfile numpy
+
+      - name: Record the samples
+        run: python scripts/voice_samples.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voice-samples
+          path: voice-samples.zip
+          retention-days: 14
