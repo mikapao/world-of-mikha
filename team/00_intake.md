@@ -46,3 +46,4 @@ Details and citations are in `team/00_feature_map.md`. Fact = seen in code, Gues
 - **Build time:** keep builds quick. Prefer light options (other Kokoro voices, speed, punctuation). Use a heavy model only if it's clearly better.
 - **Look:** keep flat faceted shading, with finer facets and rounder outlines. No material or shading change.
 - **Tablet model:** unknown. Target "recent mid-range" at ≥ 30 fps.
+- **Default character names (2026-11-22):** the owner decided to keep "Kittyping" and "Kuromi" as the default names (`src/avatars/index.js`). The Commander had flagged that they point to brand characters. This is not in scope for upgrade-1, and the team won't change them.
