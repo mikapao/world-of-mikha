@@ -116,9 +116,15 @@ test("T07 source: colours and material calls are the same, in the same order", t
 test("T07 source: obstacles, reserved spots, walk areas and positions are unchanged", t => {
   if (!haveGit()) { t.skip("git not available"); return; }
   for (const f of FILES) assert.deepEqual(placementLines(workText(f)), placementLines(headText(f)), `${f}: placement lines changed`);
-  for (const f of ["src/world/layout.js", "src/world/lighting.js", "src/engine.js", "src/world/crystalIsle.js", "src/world/winterIsle.js"]) {
+  for (const f of ["src/world/layout.js", "src/world/lighting.js", "src/world/crystalIsle.js", "src/world/winterIsle.js"]) {
     assert.equal(workText(f), headText(f), `${f} changed; T07 must not touch it`);
   }
+  // engine.js: the only allowed change is the T11 / D8 pixel-budget line in resize() (same rule as T06).
+  const ENGINE_D8_FROM = "  cam.updateProjectionMatrix();\n  renderer.setSize(innerWidth, innerHeight);";
+  const ENGINE_D8_TO = "  cam.updateProjectionMatrix();\n  renderer.setPixelRatio(Math.max(0.5, Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(2500000 / (innerWidth * innerHeight)))));\n  renderer.setSize(innerWidth, innerHeight);";
+  const eh = headText("src/engine.js");
+  assert.equal(eh.split(ENGINE_D8_FROM).length - 1, 1, "engine.js resize() anchor should occur once in base");
+  assert.equal(workText("src/engine.js"), eh.replace(ENGINE_D8_FROM, ENGINE_D8_TO), "src/engine.js differs from base by more than the D8 pixel-ratio line");
 });
 
 // ---- triangle counts ----

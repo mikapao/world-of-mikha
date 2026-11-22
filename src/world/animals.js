@@ -24,6 +24,44 @@ function part(g, geo, color, x, y, z, sx, sy, sz, opt = {}) {
   if (opt.rz) m.rotation.z = opt.rz;
   g.add(m); return m;
 }
+/** concatenate non-indexed geometries (position, normal, color) into one; own helper because the test harness only rewrites the bare "three" import */
+function mergeGeos(list) {
+  const out = new THREE.BufferGeometry();
+  for (const name of ["position", "normal", "color"]) {
+    const arr = new Float32Array(list.reduce((n, ge) => n + ge.attributes[name].array.length, 0));
+    let o = 0; for (const ge of list) { arr.set(ge.attributes[name].array, o); o += ge.attributes[name].array.length; }
+    out.setAttribute(name, new THREE.BufferAttribute(arr, 3));
+  }
+  return out;
+}
+// Vertex-colour materials. material.color is the animal's identifying (first part) colour; each vertex stores
+// partColor / materialColor, so the rendered colour (material x vertex) is exactly the original part colour.
+const vcMats = {};
+const VC = (hex, double) => { const k = hex + (double ? "d" : "s"); return vcMats[k] || (vcMats[k] = mat(hex, { vertexColors: true, side: double ? THREE.DoubleSide : THREE.FrontSide })); };
+/** merge the static mesh children of a group into 1 mesh per (side, shadow) kind; sub-groups are baked on their own so they stay movable */
+function bake(g) {
+  const buckets = {};
+  for (const c of [...g.children]) {
+    if (!c.isMesh) { if (c.isGroup) bake(c); continue; }
+    c.updateMatrix();
+    const ge = (c.geometry.index ? c.geometry.toNonIndexed() : c.geometry.clone()).applyMatrix4(c.matrix);
+    ge.deleteAttribute("uv");
+    const dbl = c.material.side === THREE.DoubleSide, k = (dbl ? "d" : "s") + (c.castShadow ? "1" : "0");
+    const b = buckets[k] || (buckets[k] = { dbl, shadow: c.castShadow, hex: c.material.color.getHex(), geos: [] });
+    const mc = new THREE.Color(b.hex), cc = c.material.color, n = ge.attributes.position.count, col = new Float32Array(n * 3);
+    const r = cc.r / Math.max(mc.r, 1 / 255), gg = cc.g / Math.max(mc.g, 1 / 255), bl = cc.b / Math.max(mc.b, 1 / 255);
+    for (let i = 0; i < n; i++) { col[i * 3] = r; col[i * 3 + 1] = gg; col[i * 3 + 2] = bl; }
+    ge.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    b.geos.push(ge);
+    g.remove(c);
+  }
+  for (const b of Object.values(buckets)) {
+    const m = new THREE.Mesh(mergeGeos(b.geos), VC(b.hex, b.dbl));
+    m.castShadow = m.receiveShadow = b.shadow;
+    g.add(m);
+  }
+  return g;
+}
 /** triangle count of a built animal (for checking the 300 limit) */
 export function triCount(g) {
   let n = 0;
@@ -170,7 +208,7 @@ export function buildAnimals(monuments) {
   ends = [];
   for (const b of BRIDGES) for (const s of [b.a, b.b]) ends.push({ x: b.ox + b.ux * s, z: b.oz + b.uz * s });
   for (const r of ROSTER) {
-    const a = { isl: ISL[r.isl], gait: r.gait, sp: r.sp, g: r.make(), phase: Math.random() * 6, pause: rnd(0, 3), tx: 0, tz: 0, moving: false, hover: rnd(0.8, 1.4), spd: 0.5 };
+    const a = { isl: ISL[r.isl], gait: r.gait, sp: r.sp, g: bake(r.make()), phase: Math.random() * 6, pause: rnd(0, 3), tx: 0, tz: 0, moving: false, hover: rnd(0.8, 1.4), spd: 0.5 };
     const start = pickSpot(a); if (!start) continue;                   // no safe spot: leave this animal out
     a.x = start.x; a.z = start.z; a.g.position.set(a.x, groundY(a.x, a.z), a.z);
     a.g.rotation.y = Math.random() * 6.28;
@@ -297,13 +335,13 @@ function buildMarine() {
     if (leapOk(x, z, ang)) leapSpots.push({ x, z, ang });
   }
   if (leapSpots.length) for (let i = 0; i < 2; i++) {
-    const g = dolphin(); g.visible = false; g.position.y = LEAP_Y0; scene.add(g);
+    const g = bake(dolphin()); g.visible = false; g.position.y = LEAP_Y0; scene.add(g);
     dolphins.push({ g, wait: rnd(2, 6) + i * 5, u: -1, spot: null });
   }
   // gulls: circles between islands
   const centres = [{ x: -9, z: 9 }, { x: 12, z: 19 }, { x: 11, z: -12 }];
   centres.forEach((c, i) => {
-    const g = seagull(); scene.add(g);
+    const g = bake(seagull()); scene.add(g);
     gulls.push({ g, c, r: 4.2 + i * 1.3, y: 4.4 + i * 0.5, th: Math.random() * 6.28, w: (0.28 + i * 0.05) * (i % 2 ? -1 : 1), ph: i * 2, x: c.x, z: c.z });
     const b = gulls[gulls.length - 1];
     b.x = c.x + Math.cos(b.th) * b.r; b.z = c.z + Math.sin(b.th) * b.r;      // start on the circle, heading along it
@@ -320,7 +358,7 @@ function buildMarine() {
       ok = openWater(c.x + ex * Math.cos(rot) - ez * Math.sin(rot), c.z + ex * Math.sin(rot) + ez * Math.cos(rot), 2.5);
     }
     if (ok) {
-      const g = turtle(); scene.add(g);
+      const g = bake(turtle()); scene.add(g);
       const th = Math.random() * 6.28, cr = Math.cos(rot), sr = Math.sin(rot);
       const ex = Math.cos(th) * ra, ez = Math.sin(th) * rb, vx = -Math.sin(th) * ra, vz = Math.cos(th) * rb;
       const x = c.x + ex * cr - ez * sr, z = c.z + ex * sr + ez * cr;

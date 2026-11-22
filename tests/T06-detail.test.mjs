@@ -89,10 +89,21 @@ test("T06 source: colours and materials are the same, in the same order", t => {
 test("T06 source: obstacles, reserved spots, walk areas and positions are unchanged", t => {
   if (!haveGit()) { t.skip("git not available"); return; }
   for (const f of FILES) assert.deepEqual(placementLines(workText(f)), placementLines(headText(f)), `${f}: placement lines changed`);
-  for (const f of ["src/world/layout.js", "src/world/lighting.js", "src/engine.js"]) {
+  for (const f of ["src/world/layout.js", "src/world/lighting.js"]) {
     assert.equal(workText(f), headText(f), `${f} changed; T06 must not touch it`);
   }
+  // engine.js: the only allowed change is the T11 / D8 pixel-budget line in resize() (see ENGINE_D8 below).
+  assert.equal(workText("src/engine.js"), engineWithD8(headText("src/engine.js")), "src/engine.js differs from HEAD by more than the D8 pixel-ratio line");
 });
+
+// T11 / D8: the one line allowed in src/engine.js. The anchor must match exactly once in the base commit.
+const ENGINE_D8_FROM = "  cam.updateProjectionMatrix();\n  renderer.setSize(innerWidth, innerHeight);";
+const ENGINE_D8_TO = "  cam.updateProjectionMatrix();\n  renderer.setPixelRatio(Math.max(0.5, Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(2500000 / (innerWidth * innerHeight)))));\n  renderer.setSize(innerWidth, innerHeight);";
+const engineWithD8 = head => {
+  const n = head.split(ENGINE_D8_FROM).length - 1;
+  assert.equal(n, 1, `engine.js resize() anchor should occur once in base, found ${n}`);
+  return head.replace(ENGINE_D8_FROM, ENGINE_D8_TO);
+};
 
 test("T06 source: snow points, glints, crystals and motes are not raised", t => {
   if (!haveGit()) { t.skip("git not available"); return; }

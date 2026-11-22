@@ -17,6 +17,7 @@ function resize() {
   const a = innerWidth / innerHeight, v = a < 1 ? VIEW * 1.25 : VIEW;
   cam.left = -v * a / 2; cam.right = v * a / 2; cam.top = v / 2; cam.bottom = -v / 2;
   cam.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.max(0.5, Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(2500000 / (innerWidth * innerHeight)))));
   renderer.setSize(innerWidth, innerHeight);
 }
 addEventListener("resize", resize); resize();

@@ -61,3 +61,12 @@ Follows `01_plan.md` (approved 2026-11-22). Contracts below are binding for the 
 ## Testing approach (all tasks)
 - Tester: `node --test tests/` (baseline 38 + task tests) and `npm run build`.
 - Commander: browser check for visual/feel tasks (T01, T02, T05–T09), screenshots compared with `team/baseline/`.
+
+## D8. Performance pass (T11), added 2026-11-22 after Gate 2 feedback
+- **Merge animal parts.** After building each animal, merge every *static* part into one `BufferGeometry` with a per-vertex `color` attribute (taken from each part's material colour, with the part's local transform applied), rendered with ONE shared material: `mat(0xffffff, { vertexColors: true })`. This keeps flat shading and the same roughness/metalness as `mat()`. Use `mergeBufferGeometries` from `three/examples/jsm/utils/BufferGeometryUtils.js` (r128). Convert parts to non-indexed or indexed consistently, and keep only the `position`, `normal` and `color` attributes.
+- **Parts that animate on their own stay separate**, but each moving group is merged into itself: butterfly wings (`userData.wings`), gull wings, turtle flippers. Whole-animal motion (group position/rotation/bob) is unchanged.
+- Any double-sided part (`MB()`, e.g. wings) uses a merged double-sided vertex-colour material. Count materials as needed, but keep **≤ 4 draw calls per animal**.
+- **Shadows:** land animals keep `castShadow` on their merged mesh. With merging, the shadow pass adds only ~1 draw call per animal. *(Blob shadows from the revision note are dropped: merging makes real shadows cheap, and they look better.)*
+- **Pixel budget** in `engine.js` `resize()`: pixel ratio = `min(devicePixelRatio, 2, sqrt(2_500_000 / (innerWidth * innerHeight)))`, never below 0.5 (was 0.75; see note above). Recompute on every resize. **Floor changed to 0.5 (2026-11-22, Commander)**: 0.75 contradicted the 2.5 M budget at 4K.
+- Must stay the same: colours, sizes, silhouettes, every animation and keep-out behaviour, triangles per animal (±5%), and the T08/T09 tests.
+- Target: draw calls with all animals ≤ ~300 (was 370). ≥ 30 fps at a 2560×1440 viewport in the Claude pane with `?debug`.
