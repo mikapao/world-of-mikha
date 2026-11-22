@@ -146,6 +146,5 @@ include `LEAVE_BUTTON`; finish screens call `ctx.shell.leave()`. Use a `run` cou
 - Microphone works only over https or in the APK — not via the Wi-Fi dev URL on the tablet.
 - `public/voice/` must never be committed (it's generated and gitignored).
 - APK app icon: CI runs scripts/make_android_icons.py after `cap add android` (from public/icons). Since 2026-11-22.
-- Ideas not done yet: gentle session timer ("the island is going to sleep")
-, offline service worker
+- Ideas not done yet: gentle session timer ("the island is going to sleep"), offline service worker
   for the web version.
