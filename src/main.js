@@ -28,6 +28,7 @@ import { AVATARS } from "./avatars/index.js";
 import { nameOf } from "./avatars/names.js";
 import { content, loadContent } from "./content.js";
 import { addEntry } from "./storage.js";
+import { initDebug, debugFrame } from "./debug.js";
 
 const nextFrame = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
 const upTo = (p, ms) => Promise.race([p, new Promise(r => setTimeout(r, ms))]);   // never wait forever
@@ -38,6 +39,7 @@ setBlocked(uiOpen);
 
 // ---- build everything step by step, so the loading bar can move ----
 async function boot() {
+  initDebug();                                         // only does something with ?debug in the URL
   await nextFrame();
   splash.progress(8, "Filling the waterfall… 💧");
   const contentP = loadContent();
@@ -133,5 +135,6 @@ function loop(now) {
   enterBtn.classList.toggle("show", !!nearMon);
 
   renderer.render(scene, cam);
+  debugFrame(renderer);
   requestAnimationFrame(loop);
 }
