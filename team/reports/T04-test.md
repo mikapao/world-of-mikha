@@ -88,3 +88,8 @@ Not applicable to this task (no browser UI). When the owner has the artifact:
 - Read both files. They have one KPipeline per accent, the same install steps as `publish-web.yml`, no secrets, `contents: read`, and the push trigger is limited to `milestone/**` and the two files.
 - The real recording run needs the milestone branch on GitHub, which needs the owner's OK to push. The run result gets recorded here afterwards.
 **T04 accepted (pending the first CI run).**
+
+## First CI run (2026-11-22): SUCCESS
+- Run 45003981347 on `milestone/upgrade-1` took about 2 min 13 s (08:41:28 to 08:43:41 UTC).
+- Artifact `voice-samples` is 733,598 bytes, kept 14 days.
+- Waiting for the owner to listen and pick a voice (unblocks T10).

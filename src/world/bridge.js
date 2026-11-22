@@ -22,7 +22,7 @@ export function buildBridge(BR, colors = [0xc89a6c, 0x9c7350]) {
       rail.rotation.x = -Math.atan2(dy, dz); bridge.add(rail);
     });
     if (i % 6 === 0) posts.forEach(p => {
-      const l = mesh(new THREE.SphereGeometry(0.13, 8, 6),
+      const l = mesh(new THREE.SphereGeometry(0.13, 10, 6),
         new THREE.MeshStandardMaterial({ color: 0xffe9a8, emissive: 0xffc860, emissiveIntensity: 0.2 }), p.px, p.y + 0.12, p.s, false);
       bridge.add(l); lanterns.push(l);
     });

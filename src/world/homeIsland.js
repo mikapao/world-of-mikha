@@ -8,9 +8,9 @@ import { ISLAND_R, obstacles, reserved } from "./layout.js";
 const trees = [], clouds = [];
 
 export function buildHomeIsland() {
-  const grass = mesh(new THREE.CylinderGeometry(ISLAND_R, ISLAND_R - 0.6, 0.8, 10), mat(0xa8dc8c), 0, -0.4, 0);
+  const grass = mesh(new THREE.CylinderGeometry(ISLAND_R, ISLAND_R - 0.6, 0.8, 14), mat(0xa8dc8c), 0, -0.4, 0);
   grass.castShadow = false; scene.add(grass);
-  scene.add(mesh(new THREE.CylinderGeometry(ISLAND_R - 0.6, ISLAND_R - 3, 2.2, 10), mat(0xd9b48c), 0, -1.9, 0, false));
+  scene.add(mesh(new THREE.CylinderGeometry(ISLAND_R - 0.6, ISLAND_R - 3, 2.2, 14), mat(0xd9b48c), 0, -1.9, 0, false));
 
   const leafColors = [0x8fd19e, 0x79c48b, 0xf5b8cf, 0xb9a7ec, 0x9fd8c8];
   for (let i = 0; i < 20; i++) {
@@ -18,8 +18,8 @@ export function buildHomeIsland() {
     do { const a = rnd(0, Math.PI * 2), r = rnd(3.5, ISLAND_R - 1.3); x = Math.cos(a) * r; z = Math.sin(a) * r; t++; }
     while (t < 40 && !(farFrom(x, z, reserved, 3.6) && farFrom(x, z, obstacles, 1.9)));
     const s = rnd(0.8, 1.25), g = new THREE.Group();
-    g.add(mesh(new THREE.CylinderGeometry(0.13 * s, 0.2 * s, 1 * s, 6), mat(0xb08a68), 0, 0.5 * s, 0));
-    const leaf = mesh(new THREE.IcosahedronGeometry(0.85 * s, 0), mat(leafColors[i % leafColors.length]), 0, 1.45 * s, 0);
+    g.add(mesh(new THREE.CylinderGeometry(0.13 * s, 0.2 * s, 1 * s, 8), mat(0xb08a68), 0, 0.5 * s, 0));
+    const leaf = mesh(new THREE.IcosahedronGeometry(0.85 * s, 1), mat(leafColors[i % leafColors.length]), 0, 1.45 * s, 0);
     g.add(leaf); g.position.set(x, 0, z); g.userData.leaf = leaf; g.userData.ph = rnd(0, 6);
     scene.add(g); trees.push(g); obstacles.push({ x, z, r: 0.55 * s });
   }
