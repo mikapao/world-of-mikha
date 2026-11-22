@@ -41,7 +41,7 @@ Follows `01_plan.md` (approved 2026-11-22). Contracts below are binding for the 
 ## D5. More environment detail (T05–T07)
 - Keep every material, colour, position, scale and `flatShading`. Only geometry detail arguments change (segments, `detail` level of polyhedra), plus where an outline is very blocky a cylinder/circle island top may get more radial segments.
 - Spend triangles on large, visible shapes: island tops and sides, tree canopies/trunks, big rocks (Icosahedron/Dodecahedron detail 0 → 1 only for rocks with radius ≥ 0.5), igloo, snow drifts, mushroom caps, lollipops, cupcakes, donuts, willows, bridge rails/posts. Do **not** raise: sprinkles, flowers, gumdrops, tufts, stars, snow, fireflies, the ocean plane.
-- Each task reports its area's triangle count before/after using the D1 overlay method. Milestone target after T07: islands + bridges (ocean excluded) **44,500–48,200**; each task aims for +20–30% within its own area.
+- Each task reports its area's triangle count before/after using the D1 overlay method. Milestone target after T07: islands + bridges (ocean excluded) **44,500–48,200**; each task aims for +20–30% within its own area. **Clarified 2026-11-22 (Commander):** the milestone total is binding (brief "Done when" 1). The per-area band is guidance only. An area may land outside it, which must be recorded in that task's report.
 - Obstacles, walk circles, reserved lists: unchanged.
 
 ## D6. Animals (T08–T09)

@@ -25,17 +25,17 @@ function spot(minR, gap, list) {
 }
 
 export function buildMeadowIsle() {
-  const top = mesh(new THREE.CylinderGeometry(I5.r, I5.r - 0.4, 0.8, 14), mat(0x5f9a68), 0, -0.4, 0); top.castShadow = false; isle5.add(top);
-  isle5.add(mesh(new THREE.CylinderGeometry(I5.r - 0.4, I5.r - 2.6, 3, 14), mat(0x6b5a48), 0, -2.3, 0, false));
+  const top = mesh(new THREE.CylinderGeometry(I5.r, I5.r - 0.4, 0.8, 20), mat(0x5f9a68), 0, -0.4, 0); top.castShadow = false; isle5.add(top);
+  isle5.add(mesh(new THREE.CylinderGeometry(I5.r - 0.4, I5.r - 2.6, 3, 20), mat(0x6b5a48), 0, -2.3, 0, false));
   const used = [];
   // willow trees with drooping branches
   for (let i = 0; i < 5; i++) {
     const p = spot(3, 2.6, used), g = new THREE.Group(); g.position.set(p.x, 0, p.z);
-    g.add(mesh(new THREE.CylinderGeometry(0.16, 0.26, 1.8, 6), mat(0x6e5640), 0, 0.9, 0));
-    const crown = mesh(new THREE.SphereGeometry(0.95, 9, 7), mat(0x4f8a5c), 0, 2.05, 0); crown.scale.y = 0.7; g.add(crown);
+    g.add(mesh(new THREE.CylinderGeometry(0.16, 0.26, 1.8, 8), mat(0x6e5640), 0, 0.9, 0));
+    const crown = mesh(new THREE.SphereGeometry(0.95, 14, 10), mat(0x4f8a5c), 0, 2.05, 0); crown.scale.y = 0.7; g.add(crown);
     const strands = new THREE.Group(); strands.position.y = 1.9; g.add(strands);
     for (let k = 0; k < 9; k++) {
-      const a = k / 9 * 6.28, s = mesh(new THREE.SphereGeometry(0.22, 6, 5), mat(k % 2 ? 0x5b9a68 : 0x477d55), Math.cos(a) * 0.85, -0.55, Math.sin(a) * 0.85);
+      const a = k / 9 * 6.28, s = mesh(new THREE.SphereGeometry(0.22, 8, 6), mat(k % 2 ? 0x5b9a68 : 0x477d55), Math.cos(a) * 0.85, -0.55, Math.sin(a) * 0.85);
       s.scale.set(0.8, 3, 0.8); strands.add(s);
     }
     g.userData = { strands, ph: rnd(0, 6) }; isle5.add(g); willows.push(g);
@@ -46,8 +46,8 @@ export function buildMeadowIsle() {
   for (let i = 0; i < 12; i++) {
     const p = spot(1.6, 1.0, used), g = new THREE.Group(); g.position.set(p.x, 0, p.z);
     const s = rnd(0.6, 1.1), col = capCols[i % 4];
-    g.add(mesh(new THREE.CylinderGeometry(0.06 * s, 0.09 * s, 0.45 * s, 6), mat(0xf1ece0), 0, 0.22 * s, 0, false));
-    const cap = mesh(new THREE.SphereGeometry(0.26 * s, 9, 6, 0, Math.PI * 2, 0, Math.PI / 2),
+    g.add(mesh(new THREE.CylinderGeometry(0.06 * s, 0.09 * s, 0.45 * s, 8), mat(0xf1ece0), 0, 0.22 * s, 0, false));
+    const cap = mesh(new THREE.SphereGeometry(0.26 * s, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2),
       new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.2, flatShading: true }), 0, 0.42 * s, 0, false);
     g.add(cap); g.userData = { cap, ph: rnd(0, 6) }; isle5.add(g); mushrooms.push(g);
   }
