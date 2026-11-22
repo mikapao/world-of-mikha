@@ -54,3 +54,4 @@ Merging runs both cloud builds. The first one takes longer because every line is
 - Proposed fix: new task T11 (see `01_plan.md` revision). Waiting for owner approval.
 - **Fixed by T11 (2026-11-22):** animals are merged into 1–5 draw calls each, and the frame is capped at about 2.5 M pixels. At 2560×1440 in the Claude pane: 36 → **60 fps** on every island. Waiting for the owner to retest in Edge.
 - **Owner retest (2026-11-22):** full-screen Edge on the high-res monitor is **smooth** after T11. Next: tablet Stage A, then merge for Stage B.
+- **PR opened (2026-11-22):** https://github.com/mikapao/world-of-mikha/pull/1 (milestone/upgrade-1 → main), opened by the owner from the pre-filled link. Merging is the owner's call (charter Step 5).
